@@ -1,15 +1,23 @@
 package io.github.diskusagereborn
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import io.github.diskusagereborn.ui.theme.DiskUsageTheme
 
 class MainActivity : ComponentActivity() {
@@ -17,27 +25,64 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             DiskUsageTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Greeting("Android")
+                StartDialog(contents = arrayOf("1234", "12345"), onSelect = this::onSelect) {
+
                 }
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-            text = "Hello $name!",
-            modifier = modifier
-    )
-}
+    @Preview(showBackground = true)
+    @Composable
+    fun GreetingPreview() {
+        DiskUsageTheme {
+            StartDialog(contents = arrayOf("1234", "12345"), onSelect = this::onSelect) {
 
-@Preview(showBackground = true)
+            }
+        }
+    }
+
+    private fun onSelect(option: String) {
+        Log.i(null, option)
+    }
+}
 @Composable
-fun GreetingPreview() {
-    DiskUsageTheme {
-        Greeting("Android")
+fun StartDialog(contents : Array<String>,
+                onSelect : (String) -> Unit,
+                onDismissRequest : () -> Unit) {
+    Dialog(onDismissRequest = { onDismissRequest() }) {
+        // Draw a rectangle shape with rounded corners inside the dialog
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            shape = RoundedCornerShape(16.dp),
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start,
+            ) {
+                Text(
+                    text = "Choose disk to examine.",
+                    modifier = Modifier
+                        .padding(16.dp, 16.dp, 16.dp, 0.dp),
+                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp, 0.dp, 16.dp, 0.dp)
+                ) {
+                    for (content in contents) {
+                        TextButton(
+                            onClick = { onSelect(content) },
+                        ) {
+                            Text(content)
+                        }
+                    }
+                }
+            }
+        }
     }
 }
