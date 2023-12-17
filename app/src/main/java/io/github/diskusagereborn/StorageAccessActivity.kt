@@ -44,7 +44,9 @@ class StorageAccessActivity : ComponentActivity() {
     }
 
     private fun goToLoad() {
-
+        val loadActivity =
+            Intent(this@StorageAccessActivity, LoadActivityImpl::class.java)
+        startActivity(loadActivity)
         finish()
     }
 

@@ -37,6 +37,9 @@
         <activity android:name=".StorageAccessActivity"
             android:theme="@style/Theme.DiskUsage">
         </activity>
+        <activity android:name=".LoadActivityImpl"
+            android:theme="@style/Theme.DiskUsage">
+        </activity>
     </application>
 
 </manifest>
