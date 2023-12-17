@@ -18,16 +18,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import io.github.diskusagereborn.core.fs.mount.MountPoint
 import io.github.diskusagereborn.ui.theme.DiskUsageTheme
+import io.github.diskusagereborn.utils.AppHelper
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             DiskUsageTheme {
-                StartDialog(contents = arrayOf("1234", "12345"), onSelect = this::onSelect) {
-
-                }
+                StartDialog(
+                    contents = generateChooseList(),
+                    onSelect = this::onSelect) {}
             }
         }
     }
@@ -36,10 +39,14 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun GreetingPreview() {
         DiskUsageTheme {
-            StartDialog(contents = arrayOf("1234", "12345"), onSelect = this::onSelect) {
-
-            }
+            StartDialog(contents = arrayOf("1234", "12345"), onSelect = this::onSelect) {}
         }
+    }
+
+    private fun generateChooseList() : Array<String> {
+        val mountList : List<MountPoint> = MountPoint.getMountPoints(AppHelper.appContext)
+        val mountTitles : List<String> = mountList.mapNotNull { mnt -> mnt.title }
+        return mountTitles.toTypedArray()
     }
 
     private fun onSelect(option: String) {
