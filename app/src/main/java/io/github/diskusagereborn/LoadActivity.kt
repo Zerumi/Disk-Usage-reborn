@@ -43,13 +43,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import io.github.diskusagereborn.core.fs.entity.FileSystemEntry
 import io.github.diskusagereborn.ui.theme.DiskUsageTheme
+import io.github.diskusagereborn.utils.Logger.Companion.LOGGER
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 open class LoadActivity : ComponentActivity() {
 
+    lateinit var key : String;
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        key = intent.getStringExtra(DiskUsageApplication.KEY_KEY).toString()
         FileSystemEntry.setupStrings(this)
         setContent {
             DiskUsageTheme {
@@ -60,6 +64,7 @@ open class LoadActivity : ComponentActivity() {
 
     /** Iterate the progress value */
     private suspend fun loadProgress(updateProgress: (Float, String) -> Unit) {
+        LOGGER.i("loadProcess() - key: " + key)
         for (i in 1..100) {
             updateProgress(i.toFloat() / 100, if (i % 3 == 0) "Fizz" else if (i % 5 == 0) "Buzz" else "FizzBuzz")
             delay(100)

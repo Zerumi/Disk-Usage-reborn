@@ -46,6 +46,8 @@ class StorageAccessActivity : ComponentActivity() {
     private fun goToLoad() {
         val loadActivity =
             Intent(this@StorageAccessActivity, LoadActivity::class.java)
+        loadActivity.putExtra(DiskUsageApplication.KEY_KEY,
+            this.intent.getStringExtra(DiskUsageApplication.KEY_KEY))
         startActivity(loadActivity)
         finish()
     }
