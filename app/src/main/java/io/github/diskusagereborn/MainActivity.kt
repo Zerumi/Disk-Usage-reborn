@@ -1,7 +1,7 @@
 package io.github.diskusagereborn
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -51,7 +51,8 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun onSelect(optionIndex: Int) {
-        Log.i(null, mountList[optionIndex].title!!)
+        startActivity(Intent(this@MainActivity, StorageAccessActivity::class.java))
+        finish()
     }
 }
 @Composable
