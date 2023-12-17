@@ -23,9 +23,11 @@ import io.github.diskusagereborn.ui.theme.DiskUsageTheme
 import io.github.diskusagereborn.utils.AppHelper
 
 class MainActivity : ComponentActivity() {
+
+    private lateinit var mountList: List<MountPoint>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        mountList = MountPoint.getMountPoints(AppHelper.appContext)
         setContent {
             DiskUsageTheme {
                 StartDialog(
@@ -44,18 +46,17 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun generateChooseList() : Array<String> {
-        val mountList : List<MountPoint> = MountPoint.getMountPoints(AppHelper.appContext)
         val mountTitles : List<String> = mountList.mapNotNull { mnt -> mnt.title }
         return mountTitles.toTypedArray()
     }
 
-    private fun onSelect(option: String) {
-        Log.i(null, option)
+    private fun onSelect(optionIndex: Int) {
+        Log.i(null, mountList[optionIndex].title!!)
     }
 }
 @Composable
 fun StartDialog(contents : Array<String>,
-                onSelect : (String) -> Unit,
+                onSelect : (Int) -> Unit,
                 onDismissRequest : () -> Unit) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
         // Draw a rectangle shape with rounded corners inside the dialog
@@ -81,11 +82,11 @@ fun StartDialog(contents : Array<String>,
                         .fillMaxWidth()
                         .padding(16.dp, 0.dp, 16.dp, 0.dp)
                 ) {
-                    for (content in contents) {
+                    for (i in contents.indices) {
                         TextButton(
-                            onClick = { onSelect(content) },
+                            onClick = { onSelect(i) },
                         ) {
-                            Text(content)
+                            Text(contents[i])
                         }
                     }
                 }
