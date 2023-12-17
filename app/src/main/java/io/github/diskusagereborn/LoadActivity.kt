@@ -18,6 +18,7 @@
  */
 package io.github.diskusagereborn
 
+import android.app.ActivityManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -41,15 +42,38 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import io.github.diskusagereborn.core.Apps2SDLoader
+import io.github.diskusagereborn.core.data.source.fast.LegacyFileImpl.Companion.createRoot
+import io.github.diskusagereborn.core.fs.FileSystemStats
 import io.github.diskusagereborn.core.fs.entity.FileSystemEntry
+import io.github.diskusagereborn.core.fs.entity.FileSystemRoot
+import io.github.diskusagereborn.core.fs.entity.FileSystemRoot.Companion.makeNode
+import io.github.diskusagereborn.core.fs.mount.MountPoint.Companion.getForKey
+import io.github.diskusagereborn.core.fs.mount.MountPoint.Companion.getMountPoints
+import io.github.diskusagereborn.core.scanner.NativeScanner
+import io.github.diskusagereborn.core.scanner.Scanner
 import io.github.diskusagereborn.ui.theme.DiskUsageTheme
 import io.github.diskusagereborn.utils.Logger.Companion.LOGGER
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Collections
 
 open class LoadActivity : ComponentActivity() {
 
-    lateinit var key : String
+    private lateinit var key : String
+
+    private lateinit var updateProgress: (Float, String) -> Unit
+    private val memoryMaxHeap: Int
+        get() = run {
+            val manager = this.getSystemService(ACTIVITY_SERVICE) as ActivityManager
+            return manager.memoryClass * 1024 * 1024
+        }
+    private val memoryQuota: Int
+        get() {
+            val totalMem = memoryMaxHeap
+            val numMountPoints = getMountPoints(this).size
+            return totalMem / (numMountPoints + 1)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,10 +88,59 @@ open class LoadActivity : ComponentActivity() {
 
     /** Iterate the progress value */
     private suspend fun loadProgress(updateProgress: (Float, String) -> Unit) {
+        startLoadDirectories(updateProgress = updateProgress)
+    }
+    private suspend fun startLoadDirectories(updateProgress: (Float, String) -> Unit) {
+        val mountPoint = getForKey(this, key)
+        val stats = FileSystemStats(mountPoint!!)
+        val heap = memoryQuota
+        val rootElement: FileSystemEntry = try {
+            val scanner = NativeScanner(stats.blockSize, stats.busyBlocks, heap)
+            scanner.scan(mountPoint)!!
+        } catch (e: Exception) {
+            val scanner = Scanner(20, stats.blockSize, stats.busyBlocks, heap)
+            scanner.scan(createRoot(mountPoint.root))!!
+        }
+
+        var entries = ArrayList<FileSystemEntry?>()
+        if (rootElement.children != null) {
+            rootElement.children?.let { Collections.addAll(entries, *it) }
+        }
+        if (mountPoint.hasApps()) {
+            val media = makeNode(
+                getString(R.string.graph_media), mountPoint.root!!, false
+            ).setChildren(
+                entries.toTypedArray<FileSystemEntry?>(),
+                stats.blockSize
+            ) as FileSystemRoot
+            entries = ArrayList()
+            entries.add(media)
+            val appList = loadApps2SD(stats.blockSize, updateProgress)
+
+            LOGGER.i("applist size ${appList?.size}")
+
+            /* if (appList != null) {
+                moveAppData(appList, media, stats.blockSize)
+                val apps = makeNode(null, getString(R.string.graph_apps)).setChildren(
+                    appList as Array<FileSystemEntry?>,
+                    stats.blockSize
+                )
+                entries.add(apps)
+            } */
+        }
         LOGGER.i("loadProcess() - key: $key")
-        for (i in 1..100) {
+        /*for (i in 1..100) {
             updateProgress(i.toFloat() / 100, if (i % 3 == 0) "Fizz" else if (i % 5 == 0) "Buzz" else "FizzBuzz")
-            delay(100)
+            delay(10)
+        }*/
+    }
+
+    private suspend fun loadApps2SD(blockSize: Long, updateProgress: (Float, String) -> Unit): Array<FileSystemEntry>? {
+        return try {
+            Apps2SDLoader(this, updateProgress).load(blockSize)
+        } catch (t: Throwable) {
+            LOGGER.e("DiskUsage.loadApps2SD(): Problem loading apps2sd info", t)
+            null
         }
     }
 

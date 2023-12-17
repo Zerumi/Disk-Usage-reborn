@@ -22,7 +22,6 @@ import android.content.Context
 import io.github.diskusagereborn.R
 import io.github.diskusagereborn.core.data.source.fast.PortableFileImpl.Companion.externalAppFilesDirs
 import io.github.diskusagereborn.core.fs.mount.RootMountPoint.Companion.getForKey
-import io.github.diskusagereborn.core.fs.mount.RootMountPoint.Companion.initMountPoints
 import io.github.diskusagereborn.utils.Logger.Companion.LOGGER
 
 open class MountPoint internal constructor(
