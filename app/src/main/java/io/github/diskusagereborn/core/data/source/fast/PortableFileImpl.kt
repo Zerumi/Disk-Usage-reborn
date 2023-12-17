@@ -46,7 +46,7 @@ class PortableFileImpl private constructor(private val file: File) : PortableFil
     }
 
     companion object {
-        fun make(file: File?): PortableFileImpl? {
+        private fun make(file: File?): PortableFileImpl? {
             return file?.let { PortableFileImpl(it) }
         }
 

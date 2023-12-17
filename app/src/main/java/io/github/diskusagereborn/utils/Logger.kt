@@ -9,7 +9,7 @@ class Logger(private val tag: String) {
         val LOGGER: Logger = Logger("DiskUsage")
     }
 
-    fun isLoggable(tag: String, level: Int): Boolean {
+    private fun isLoggable(tag: String, level: Int): Boolean {
         return true
     }
 
