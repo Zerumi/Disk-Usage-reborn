@@ -1,10 +1,12 @@
 package io.github.diskusagereborn
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -25,13 +27,34 @@ class StorageAccessActivity : ComponentActivity() {
             else
                 checkAccessM()
 
+        if (hasAccess) {
+            goToLoad()
+        }
+
         setContent {
             DiskUsageTheme {
-                RequireAccessDialog(title = "Access require",
-                    message = if (hasAccess) "Access Granted" else "Access Required!!",
-                    onConfirm = {}) {}
+                RequireAccessDialog(title = "Access required",
+                    message =  "Access Required. Please, confirm to proceed setting necessary permissions, after them restart the app",
+                    onConfirm = {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) requestAccessR()
+                        else requestAccessM()
+                    }) { finish() }
             }
         }
+    }
+
+    private fun goToLoad() {
+
+        finish()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun requestAccessR() {
+        startActivity(Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION))
+    }
+
+    private fun requestAccessM() {
+        startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
     }
 
     @RequiresApi(Build.VERSION_CODES.R)

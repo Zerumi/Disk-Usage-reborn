@@ -51,7 +51,10 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun onSelect(optionIndex: Int) {
-        startActivity(Intent(this@MainActivity, StorageAccessActivity::class.java))
+        val checkAccessActivity : Intent
+            = Intent(this@MainActivity, StorageAccessActivity::class.java)
+        checkAccessActivity.putExtra(DiskUsageApplication.KEY_KEY, mountList[optionIndex].key)
+        startActivity(checkAccessActivity)
         finish()
     }
 }
