@@ -53,7 +53,6 @@ open class MountPoint internal constructor(
         @JvmStatic
         fun getMountPoints(context: Context): List<MountPoint> {
             initMountPoints(context)
-            initMountPoints()
             return mountPoints
         }
 
