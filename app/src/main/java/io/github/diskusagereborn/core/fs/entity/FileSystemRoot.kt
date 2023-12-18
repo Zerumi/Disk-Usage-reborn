@@ -6,7 +6,7 @@ class FileSystemRoot private constructor(
     name: String?,
     val rootPath: String,
     override val isDeletable: Boolean
-) : FileSystemEntry(null, name!!) {
+) : FileSystemEntry(null, name ?: "") {
 
     override fun create(): FileSystemEntry {
         return FileSystemRoot(name, rootPath, isDeletable)
@@ -44,8 +44,8 @@ class FileSystemRoot private constructor(
             return FileSystemRoot(name, rootPath, deletable)
         }
 
-        fun withSlash(path: String): String {
-            var path = path
+        fun withSlash(sourcePath: String): String {
+            var path = sourcePath
             if (path.isNotEmpty() && path[path.length - 1] != '/') path += '/'
             return path
         }
