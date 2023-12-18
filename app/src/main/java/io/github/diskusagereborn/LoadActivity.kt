@@ -46,8 +46,11 @@ import io.github.diskusagereborn.core.Apps2SDLoader
 import io.github.diskusagereborn.core.data.source.fast.LegacyFileImpl.Companion.createRoot
 import io.github.diskusagereborn.core.fs.FileSystemStats
 import io.github.diskusagereborn.core.fs.entity.FileSystemEntry
+import io.github.diskusagereborn.core.fs.entity.FileSystemFreeSpace
 import io.github.diskusagereborn.core.fs.entity.FileSystemRoot
 import io.github.diskusagereborn.core.fs.entity.FileSystemRoot.Companion.makeNode
+import io.github.diskusagereborn.core.fs.entity.FileSystemSuperRoot
+import io.github.diskusagereborn.core.fs.entity.FileSystemSystemSpace
 import io.github.diskusagereborn.core.fs.mount.MountPoint.Companion.getForKey
 import io.github.diskusagereborn.core.fs.mount.MountPoint.Companion.getMountPoints
 import io.github.diskusagereborn.core.scanner.NativeScanner
@@ -56,6 +59,8 @@ import io.github.diskusagereborn.ui.theme.DiskUsageTheme
 import io.github.diskusagereborn.utils.Logger.Companion.LOGGER
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.IOException
+import java.util.Arrays
 import java.util.Collections
 
 open class LoadActivity : ComponentActivity() {
@@ -94,7 +99,7 @@ open class LoadActivity : ComponentActivity() {
         val mountPoint = getForKey(this, key)
         val stats = FileSystemStats(mountPoint!!)
         val heap = memoryQuota
-        val rootElement: FileSystemEntry = try {
+        var rootElement: FileSystemEntry = try {
             val scanner = NativeScanner(stats.blockSize, stats.busyBlocks, heap)
             scanner.scan(mountPoint)!!
         } catch (e: Exception) {
@@ -129,10 +134,48 @@ open class LoadActivity : ComponentActivity() {
             } */
         }
         LOGGER.i("loadProcess() - key: $key")
-        /*for (i in 1..100) {
-            updateProgress(i.toFloat() / 100, if (i % 3 == 0) "Fizz" else if (i % 5 == 0) "Buzz" else "FizzBuzz")
-            delay(10)
-        }*/
+
+        var visibleBlocks: Long = 0
+        for (e in entries) {
+            visibleBlocks += e!!.sizeInBlocks
+        }
+        val systemBlocks = stats.totalBlocks - stats.freeBlocks - visibleBlocks
+        Collections.sort(entries, FileSystemEntry.COMPARE)
+        if (systemBlocks > 0) {
+            entries.add(
+                FileSystemSystemSpace(
+                    getString(R.string.graph_system_data),
+                    systemBlocks * stats.blockSize,
+                    stats.blockSize
+                )
+            )
+            entries.add(
+                FileSystemFreeSpace(
+                    getString(R.string.graph_free_space),
+                    stats.freeBlocks * stats.blockSize,
+                    stats.blockSize
+                )
+            )
+        } else {
+            val freeBlocks = stats.freeBlocks + systemBlocks
+            if (freeBlocks > 0) {
+                entries.add(
+                    FileSystemFreeSpace(
+                        getString(R.string.graph_free_space),
+                        freeBlocks * stats.blockSize,
+                        stats.blockSize
+                    )
+                )
+            }
+        }
+        rootElement = makeNode(
+            mountPoint.title, mountPoint.root!!, false
+        )
+            .setChildren(entries.toTypedArray<FileSystemEntry?>(), stats.blockSize)
+        val newRoot = FileSystemSuperRoot(stats.blockSize)
+        newRoot.setChildren(arrayOf(rootElement), stats.blockSize)
+
+        // return newRoot
     }
 
     private suspend fun loadApps2SD(blockSize: Long, updateProgress: (Float, String) -> Unit): Array<FileSystemEntry>? {

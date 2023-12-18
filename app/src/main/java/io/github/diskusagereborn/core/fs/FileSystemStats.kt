@@ -8,9 +8,9 @@ import io.github.diskusagereborn.utils.Logger.Companion.LOGGER
 
 class FileSystemStats(mountPoint: MountPoint) {
     var blockSize: Long = 0
-    private var freeBlocks: Long = 0
+    var freeBlocks: Long = 0
     var busyBlocks: Long = 0
-    private var totalBlocks: Long = 0
+    var totalBlocks: Long = 0
 
     init {
         var stats: StatFsSource? = null
