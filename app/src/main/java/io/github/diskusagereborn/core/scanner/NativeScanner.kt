@@ -166,7 +166,7 @@ class NativeScanner(
 
     private fun print(msg: String, list: SmallList) {
         val hiddenPath = StringBuilder()
-        // FIXME: this is debug
+        // !! this is debug
         var p = list.parent
         while (p != null) {
             hiddenPath.insert(0, p.name + "/")
@@ -659,7 +659,7 @@ class NativeScanner(
             }
 
 //        String hidden_path = msg;
-//        // FIXME: this is debug
+//        !! this is debug
 //        for(FileSystemEntry p = thisNode; p != null; p = p.parent) {
 //          hidden_path = p.name + "/" + hidden_path;
 //        }
@@ -711,7 +711,7 @@ class NativeScanner(
                 + 16 /* FileSystemEntry */ //      + 10000 /* dummy in FileSystemEntry */
                 + 8 + 10 /* aproximation of size string */
                 + 8 /* name header */
-                + (name!!.length * 2)) /* name length */
+                + name!!.length * 2) /* name length */
         heapSize += createdNodeSize
         while (heapSize > maxHeapSize && !smallLists.isEmpty()) {
             val removed = smallLists.remove()
