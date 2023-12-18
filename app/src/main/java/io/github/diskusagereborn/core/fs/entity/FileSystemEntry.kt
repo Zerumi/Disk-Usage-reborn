@@ -52,10 +52,6 @@ open class FileSystemEntry protected constructor(@JvmField var parent: FileSyste
     // 3: sz < 1024 * 1024 * 200:  "%5.1f MiB", sz * (1f / 1024 / 1024)
     // 4: sz >= 1024 * 1024 * 200: "%4.0f MiB", sz * (1f / 1024 / 1024)
     //
-    // FIXME: remove outdate info:
-    // reminder can be 0..blockSize (inclusive)
-    // size in bytes = (size in blocks * blockSize) + reminder - blockSize;
-    // FIXME: make private and update code which uses it
     @JvmField
     var encodedSize: Long = 0
 
@@ -386,7 +382,7 @@ open class FileSystemEntry protected constructor(@JvmField var parent: FileSyste
     private fun absolutePath(): String {
         return if (this is FileSystemRoot) {
             this.rootPath
-        } else (parent?.absolutePath()) + "/" + name
+        } else parent?.absolutePath() + "/" + name
     }
 
     /**
@@ -430,7 +426,7 @@ open class FileSystemEntry protected constructor(@JvmField var parent: FileSyste
                 entry = e
                 children0 = e.children
                 if (children0 == null) return entry
-                break
+                else break
             }
         }
         return entry
@@ -463,7 +459,6 @@ open class FileSystemEntry protected constructor(@JvmField var parent: FileSyste
         return offset
     }
 
-    // FIXME: no resort needed
     fun remove(blockSize: Long) {
         val children0 = parent?.children
         val len = children0?.size ?: return
@@ -485,8 +480,6 @@ open class FileSystemEntry protected constructor(@JvmField var parent: FileSyste
             }
             return
         }
-        // FIXME: the exception was thrown somehow
-        // throw new RuntimeException("child is not found: " + this);
     }
 
     fun insert(newEntry: FileSystemEntry, blockSize: Long) {
@@ -507,7 +500,7 @@ open class FileSystemEntry protected constructor(@JvmField var parent: FileSyste
 
     /**
      * Walks through the path and finds the specified entry, null otherwise.
-     * @param exactMatch TODO
+     * @param exactMatch is exact match
      */
     open fun getEntryByName(path: String, exactMatch: Boolean): FileSystemEntry? {
         LOGGER.d("FileSystemEntry.getEntryByName(): getEntryForName = %s", path)
@@ -655,404 +648,6 @@ open class FileSystemEntry protected constructor(@JvmField var parent: FileSyste
          */
         @JvmField
         val COMPARE = Compare()
-
-        // Copy pasted from paint() and changed to lower overhead on generic drawing code
-        /* private fun paintSpecialGPU(
-            parent_size: Long, entries: Array<FileSystemEntry?>?,
-            rt: RenderingThread, xoffset: Float, yoffset: Float, yscale: Float,
-            clipLeft: Long, clipTop: Long, clipBottom: Long,
-            screenHeight: Int, numSpecial: Int
-        ) {
-
-            // Deep one level in hierarchy:
-            var parent_size = parent_size
-            var entries = entries
-            var xoffset = xoffset
-            var yoffset = yoffset
-            var clipLeft = clipLeft
-            entries = entries?.get(0)!!.children
-            xoffset += elementWidth.toFloat()
-            clipLeft -= elementWidth.toLong()
-
-            // Paint as paint():
-            val children = entries
-            val len = children?.size
-            var child_clipTop = clipTop
-            var child_clipBottom = clipBottom
-            val child_xoffset = xoffset + elementWidth
-
-            // Fast skip ordinary entries, FIXME: make root node special node with extra
-            // field to get rid of this
-            if (len != null) {
-                for (i in 0 until len - numSpecial) {
-                    val c = children[i]
-                    val csize = c!!.sizeForRendering
-                    parent_size -= csize
-                    val top = yoffset
-                    val bottom = top + csize * yscale
-                    if (child_clipBottom < 0) {
-                        return
-                    }
-                    child_clipTop -= csize
-                    child_clipBottom -= csize
-                    yoffset = bottom
-                }
-            }
-            if (len != null) {
-                for (i in len - numSpecial until len) {
-                    val c = children[i]
-                    val csize = c!!.sizeForRendering
-                    parent_size -= csize
-                    val top = yoffset
-                    val bottom = top + csize * yscale
-                    ///Log.d("DiskUsage", "child: child_clip_y0 = " + child_clip_y0);
-                    ///Log.d("DiskUsage", "child: child_clip_y1 = " + child_clip_y1);
-                    if (child_clipTop > csize) {
-                        child_clipTop -= csize
-                        child_clipBottom -= csize
-                        yoffset = bottom
-                        continue
-                    }
-                    if (child_clipBottom < 0) {
-                        ///Log.d("DiskUsage", "skipped rest starting from " + c.name);
-                        return
-                    }
-                    if (clipLeft < elementWidth) {
-                        // FIXME
-                        val fontSize0 = fontSize
-
-                        // FIXME: bg_emptySpace
-                        rt.specialSquare.draw(xoffset, top, child_xoffset, bottom)
-                        if (bottom - top > fontSize0 * 2) {
-                            var pos = (top + bottom) * 0.5f
-                            if (pos < fontSize0) {
-                                pos = if (bottom > 2 * fontSize0) {
-                                    fontSize0
-                                } else {
-                                    bottom - fontSize0
-                                }
-                            } else if (pos > screenHeight.toFloat() - fontSize0) {
-                                pos = if (top < screenHeight.toFloat() - 2 * fontSize0) {
-                                    screenHeight.toFloat() - fontSize0
-                                } else {
-                                    top + fontSize0
-                                }
-                            }
-                            val pos1 = pos - descent
-                            val pos2 = pos - ascent
-                            val cache = c.getDrawingCache()
-                            cache?.drawText(rt, xoffset + 2, pos1, elementWidth - 5)
-                            cache?.drawSize(rt, xoffset + 2, pos2, elementWidth - 5)
-                        } else if (bottom - top > fontSize0) {
-                            val cache = c.getDrawingCache()
-                            cache?.drawText(
-                                rt,
-                                xoffset + 2,
-                                (top + bottom - ascent - descent) / 2,
-                                elementWidth - 5
-                            )
-                        }
-                    }
-                    child_clipTop -= csize
-                    child_clipBottom -= csize
-                    yoffset = bottom
-                }
-            }
-        }
-
-        // Copy pasted from paint() and changed to lower overhead on generic drawing code
-        private fun paintSpecial(
-            parent_size: Long, entries: Array<FileSystemEntry?>?,
-            canvas: Canvas, xoffset: Float, yoffset: Float, yscale: Float,
-            clipLeft: Long, clipTop: Long, clipBottom: Long,
-            screenHeight: Int, numSpecial: Int
-        ) {
-
-            // Deep one level in hierarchy:
-            var parent_size = parent_size
-            var entries = entries
-            var xoffset = xoffset
-            var yoffset = yoffset
-            var clipLeft = clipLeft
-            entries = entries?.get(0)!!.children
-            xoffset += elementWidth.toFloat()
-            clipLeft -= elementWidth.toLong()
-
-            // Paint as paint():
-            val children = entries
-            val len = children?.size
-            var child_clipTop = clipTop
-            var child_clipBottom = clipBottom
-            val child_xoffset = xoffset + elementWidth
-
-            // Fast skip ordinary entries, FIXME: make root node special node with extra
-            // field to get rid of this
-            if (len != null) {
-                for (i in 0 until len - numSpecial) {
-                    val c = children[i]
-                    val csize = c!!.sizeForRendering
-                    parent_size -= csize
-                    val top = yoffset
-                    val bottom = top + csize * yscale
-                    if (child_clipBottom < 0) {
-                        return
-                    }
-                    child_clipTop -= csize
-                    child_clipBottom -= csize
-                    yoffset = bottom
-                }
-            }
-            if (len != null) {
-                for (i in len - numSpecial until len) {
-                    val c = children[i]
-                    val csize = c!!.sizeForRendering
-                    parent_size -= csize
-                    val top = yoffset
-                    val bottom = top + csize * yscale
-                    ///Log.d("DiskUsage", "child: child_clip_y0 = " + child_clip_y0);
-                    ///Log.d("DiskUsage", "child: child_clip_y1 = " + child_clip_y1);
-                    if (child_clipTop > csize) {
-                        child_clipTop -= csize
-                        child_clipBottom -= csize
-                        yoffset = bottom
-                        continue
-                    }
-                    if (child_clipBottom < 0) {
-                        ///Log.d("DiskUsage", "skipped rest starting from " + c.name);
-                        return
-                    }
-                    if (clipLeft < elementWidth) {
-                        // FIXME
-                        val fontSize0 = fontSize
-                        canvas.drawRect(xoffset, top, child_xoffset, bottom, bg_emptySpace)
-                        canvas.drawRect(xoffset, top, child_xoffset, bottom, fg_rect)
-                        if (bottom - top > fontSize0 * 2) {
-                            var pos = (top + bottom) * 0.5f
-                            if (pos < fontSize0) {
-                                pos = if (bottom > 2 * fontSize0) {
-                                    fontSize0
-                                } else {
-                                    bottom - fontSize0
-                                }
-                            } else if (pos > screenHeight.toFloat() - fontSize0) {
-                                pos = if (top < screenHeight.toFloat() - 2 * fontSize0) {
-                                    screenHeight.toFloat() - fontSize0
-                                } else {
-                                    top + fontSize0
-                                }
-                            }
-                            val pos1 = pos - descent
-                            val pos2 = pos - ascent
-                            val cache = c.getDrawingCache()
-                            val sizeString = cache?.sizeString
-                            val cliplen =
-                                fg2.breakText(c.name, true, (elementWidth - 4).toFloat(), null)
-                            val clippedName = c.name.substring(0, cliplen)
-                            canvas.drawText(clippedName, xoffset + 2, pos1, textPaintFolder)
-                            if (sizeString != null) {
-                                canvas.drawText(sizeString, xoffset + 2, pos2, textPaintFolder)
-                            }
-                        } else if (bottom - top > fontSize0) {
-                            val cliplen =
-                                fg2.breakText(c.name, true, (elementWidth - 4).toFloat(), null)
-                            val clippedName = c.name.substring(0, cliplen)
-                            canvas.drawText(
-                                clippedName, xoffset + 2,
-                                (top + bottom - ascent - descent) / 2,
-                                if (c.children == null) textPaintFile else textPaintFolder
-                            )
-                        }
-                    }
-                    child_clipTop -= csize
-                    child_clipBottom -= csize
-                    yoffset = bottom
-                }
-            }
-        }
-
-        private fun paintGPU(
-            parent_size: Long, entries: Array<FileSystemEntry?>?,
-            rt: RenderingThread, xoffset: Float, yoffset: Float, yscale: Float,
-            clipLeft: Long, clipRight: Long, clipTop: Long, clipBottom: Long,
-            screenHeight: Int
-        ) {
-            var parent_size = parent_size
-            var yoffset = yoffset
-            val child_clipLeft = clipLeft - elementWidth
-            val child_clipRight = clipRight - elementWidth
-            var child_clipTop = clipTop
-            var child_clipBottom = clipBottom
-            val child_xoffset = xoffset + elementWidth
-            if (entries != null) {
-                for (c in entries) {
-                    val csize = c!!.sizeForRendering
-                    parent_size -= csize
-                    val top = yoffset
-                    var bottom = top + csize * yscale
-                    ///Log.d("DiskUsage", "child: child_clip_y0 = " + child_clip_y0);
-                    ///Log.d("DiskUsage", "child: child_clip_y1 = " + child_clip_y1);
-                    if (child_clipTop > csize) {
-                        child_clipTop -= csize
-                        child_clipBottom -= csize
-                        yoffset = bottom
-                        continue
-                    }
-                    if (child_clipBottom < 0) {
-                        ///Log.d("DiskUsage", "skipped rest starting from " + c.name);
-                        return
-                    }
-                    val cchildren = c.children
-                    if (cchildren != null) paintGPU(
-                        c.sizeForRendering, cchildren, rt,
-                        child_xoffset, yoffset, yscale,
-                        child_clipLeft, child_clipRight, child_clipTop, child_clipBottom, screenHeight
-                    )
-                    if (bottom - top < 4 && deletedEntry !== c) {
-                        bottom += parent_size * yscale
-                        rt.smallSquare.draw(xoffset, top, child_xoffset, bottom)
-                        //        canvas.drawRect(xoffset, top, child_xoffset, bottom, fg_rect);
-                        return
-                    }
-                    if (clipLeft < elementWidth) {
-                        // FIXME
-                        val fontSize0 = fontSize
-                        val isFile = c.children == null
-                        val square = if (isFile) rt.fileSquare else rt.dirSquare
-                        square.draw(xoffset, top, child_xoffset, bottom)
-                        if (bottom - top > fontSize0 * 2) {
-                            var pos = (top + bottom) * 0.5f
-                            if (pos < fontSize0) {
-                                pos = if (bottom > 2 * fontSize0) {
-                                    fontSize0
-                                } else {
-                                    bottom - fontSize0
-                                }
-                            } else if (pos > screenHeight.toFloat() - fontSize0) {
-                                pos = if (top < screenHeight.toFloat() - 2 * fontSize0) {
-                                    screenHeight.toFloat() - fontSize0
-                                } else {
-                                    top + fontSize0
-                                }
-                            }
-                            val pos1 = pos - descent
-                            val pos2 = pos - ascent
-                            val cache = c.getDrawingCache()
-                            // FIXME: text
-                            // FIXME: dir or file painted the same way
-                            cache?.drawText(rt, xoffset + 2, pos1, elementWidth - 5)
-                            cache?.drawSize(rt, xoffset + 2, pos2, elementWidth - 5)
-                        } else if (bottom - top > fontSize0) {
-                            val cache = c.getDrawingCache()
-                            // FIXME: dir and file painted the same way
-                            cache?.drawText(
-                                rt,
-                                xoffset + 2,
-                                (top + bottom - ascent - descent) / 2,
-                                elementWidth - 5
-                            )
-                        }
-                    }
-                    child_clipTop -= csize
-                    child_clipBottom -= csize
-                    yoffset = bottom
-                }
-            }
-        }
-
-        private fun paint(
-            parent_size: Long, entries: Array<FileSystemEntry?>?,
-            canvas: Canvas, xoffset: Float, yoffset: Float, yscale: Float,
-            clipLeft: Long, clipRight: Long, clipTop: Long, clipBottom: Long,
-            screenHeight: Int
-        ) {
-            var parent_size = parent_size
-            var yoffset = yoffset
-            val child_clipLeft = clipLeft - elementWidth
-            val child_clipRight = clipRight - elementWidth
-            var child_clipTop = clipTop
-            var child_clipBottom = clipBottom
-            val child_xoffset = xoffset + elementWidth
-            if (entries != null) {
-                for (c in entries) {
-                    val csize = c!!.sizeForRendering
-                    parent_size -= csize
-                    val top = yoffset
-                    var bottom = top + csize * yscale
-                    ///Log.d("DiskUsage", "child: child_clip_y0 = " + child_clip_y0);
-                    ///Log.d("DiskUsage", "child: child_clip_y1 = " + child_clip_y1);
-                    if (child_clipTop > csize) {
-                        child_clipTop -= csize
-                        child_clipBottom -= csize
-                        yoffset = bottom
-                        continue
-                    }
-                    if (child_clipBottom < 0) {
-                        ///Log.d("DiskUsage", "skipped rest starting from " + c.name);
-                        return
-                    }
-                    val cchildren = c.children
-                    if (cchildren != null) paint(
-                        c.sizeForRendering, cchildren, canvas,
-                        child_xoffset, yoffset, yscale,
-                        child_clipLeft, child_clipRight, child_clipTop, child_clipBottom, screenHeight
-                    )
-                    if (bottom - top < 4 && deletedEntry !== c) {
-                        bottom += parent_size * yscale
-                        canvas.drawRect(xoffset, top, child_xoffset, bottom, fill_bg)
-                        canvas.drawRect(xoffset, top, child_xoffset, bottom, fg_rect)
-                        return
-                    }
-                    if (clipLeft < elementWidth) {
-                        // FIXME
-                        val fontSize0 = fontSize
-                        canvas.drawRect(xoffset, top, child_xoffset, bottom, bg)
-                        canvas.drawRect(xoffset, top, child_xoffset, bottom, fg_rect)
-                        if (bottom - top > fontSize0 * 2) {
-                            var pos = (top + bottom) * 0.5f
-                            if (pos < fontSize0) {
-                                pos = if (bottom > 2 * fontSize0) {
-                                    fontSize0
-                                } else {
-                                    bottom - fontSize0
-                                }
-                            } else if (pos > screenHeight.toFloat() - fontSize0) {
-                                pos = if (top < screenHeight.toFloat() - 2 * fontSize0) {
-                                    screenHeight.toFloat() - fontSize0
-                                } else {
-                                    top + fontSize0
-                                }
-                            }
-                            val pos1 = pos - descent
-                            val pos2 = pos - ascent
-                            val cache = c.getDrawingCache()
-                            val sizeString = cache?.sizeString
-                            val cliplen =
-                                fg2.breakText(c.name, true, (elementWidth - 4).toFloat(), null)
-                            val clippedName = c.name.substring(0, cliplen)
-                            val paint = if (c.children == null) textPaintFile else textPaintFolder
-                            canvas.drawText(clippedName, xoffset + 2, pos1, paint)
-                            if (sizeString != null) {
-                                canvas.drawText(sizeString, xoffset + 2, pos2, paint)
-                            }
-                        } else if (bottom - top > fontSize0) {
-                            val cliplen =
-                                fg2.breakText(c.name, true, (elementWidth - 4).toFloat(), null)
-                            val clippedName = c.name.substring(0, cliplen)
-                            val paint = if (c.children == null) textPaintFile else textPaintFolder
-                            canvas.drawText(
-                                clippedName,
-                                xoffset + 2,
-                                (top + bottom - ascent - descent) / 2,
-                                paint
-                            )
-                        }
-                    }
-                    child_clipTop -= csize
-                    child_clipBottom -= csize
-                    yoffset = bottom
-                }
-            }
-        } */
 
         /**
          * Calculate size string for specified file length in bytes.
