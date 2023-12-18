@@ -144,7 +144,6 @@ class Scanner(
         createdNodeNumFiles = 0
         if (depth == maxDepth) {
             createdNode!!.setSizeInBlocks(calculateSize(file), blockSize)
-            // FIXME: get num of dirs and files
             return
         }
         var listNames: Array<String?>? = null
@@ -238,7 +237,7 @@ class Scanner(
             }
 
 //        String hidden_path = msg;
-//        // FIXME: this is debug
+//        !! this is debug
 //        for(FileSystemEntry p = thisNode; p != null; p = p.parent) {
 //          hidden_path = p.name + "/" + hidden_path;
 //        }
@@ -287,7 +286,7 @@ class Scanner(
                 + 16 /* FileSystemEntry */ //      + 10000 /* dummy in FileSystemEntry */
                 + 8 + 10 /* aproximation of size string */
                 + 8 /* name header */
-                + (name.length * 2)) /* name length */
+                + name.length * 2) /* name length */
         heapSize += createdNodeSize
         while (heapSize > maxHeapSize && !smallLists.isEmpty()) {
             val removed = smallLists.remove()
