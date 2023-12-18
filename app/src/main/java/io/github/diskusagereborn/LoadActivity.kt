@@ -182,7 +182,7 @@ class LoadActivity : ComponentActivity() {
     }
 
     private fun moveAppData(apps: Array<FileSystemEntry>, media: FileSystemRoot, blockSize: Long) {
-        val diskusage = "com.google.android.diskusage"
+        val diskusage = "io.github.diskusagereborn"
         for (a in apps) {
             val app = a as FileSystemPackage?
             try {
