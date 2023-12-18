@@ -30,7 +30,6 @@
             android:theme="@style/Theme.DiskUsage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -38,6 +37,9 @@
             android:theme="@style/Theme.DiskUsage">
         </activity>
         <activity android:name=".LoadActivity"
+            android:theme="@style/Theme.DiskUsage">
+        </activity>
+        <activity android:name=".DiskViewActivity"
             android:theme="@style/Theme.DiskUsage">
         </activity>
     </application>

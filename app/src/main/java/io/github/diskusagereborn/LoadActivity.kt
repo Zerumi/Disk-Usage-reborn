@@ -19,7 +19,10 @@
 package io.github.diskusagereborn
 
 import android.app.ActivityManager
+import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -47,6 +50,7 @@ import io.github.diskusagereborn.core.data.source.fast.LegacyFileImpl.Companion.
 import io.github.diskusagereborn.core.fs.FileSystemStats
 import io.github.diskusagereborn.core.fs.entity.FileSystemEntry
 import io.github.diskusagereborn.core.fs.entity.FileSystemFreeSpace
+import io.github.diskusagereborn.core.fs.entity.FileSystemPackage
 import io.github.diskusagereborn.core.fs.entity.FileSystemRoot
 import io.github.diskusagereborn.core.fs.entity.FileSystemRoot.Companion.makeNode
 import io.github.diskusagereborn.core.fs.entity.FileSystemSuperRoot
@@ -57,17 +61,16 @@ import io.github.diskusagereborn.core.scanner.NativeScanner
 import io.github.diskusagereborn.core.scanner.Scanner
 import io.github.diskusagereborn.ui.theme.DiskUsageTheme
 import io.github.diskusagereborn.utils.Logger.Companion.LOGGER
-import kotlinx.coroutines.delay
+import io.github.diskusagereborn.utils.ObjectWrapperForBinder
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.Arrays
 import java.util.Collections
 
-open class LoadActivity : ComponentActivity() {
+
+class LoadActivity : ComponentActivity() {
 
     private lateinit var key : String
-
-    private lateinit var updateProgress: (Float, String) -> Unit
     private val memoryMaxHeap: Int
         get() = run {
             val manager = this.getSystemService(ACTIVITY_SERVICE) as ActivityManager
@@ -124,14 +127,14 @@ open class LoadActivity : ComponentActivity() {
 
             LOGGER.i("applist size ${appList?.size}")
 
-            /* if (appList != null) {
+            if (appList != null) {
                 moveAppData(appList, media, stats.blockSize)
-                val apps = makeNode(null, getString(R.string.graph_apps)).setChildren(
-                    appList as Array<FileSystemEntry?>,
+                val apps = makeNode(null, getString(R.string.graph_apps), false).setChildren(
+                    appList.copyOf(appList.size),
                     stats.blockSize
                 )
                 entries.add(apps)
-            } */
+            }
         }
         LOGGER.i("loadProcess() - key: $key")
 
@@ -175,7 +178,110 @@ open class LoadActivity : ComponentActivity() {
         val newRoot = FileSystemSuperRoot(stats.blockSize)
         newRoot.setChildren(arrayOf(rootElement), stats.blockSize)
 
-        // return newRoot
+        goToView(newRoot)
+    }
+
+    private fun moveAppData(apps: Array<FileSystemEntry>, media: FileSystemRoot, blockSize: Long) {
+        val diskusage = "com.google.android.diskusage"
+        for (a in apps) {
+            val app = a as FileSystemPackage?
+            try {
+                val cacheDir = cacheDir.canonicalPath.replace(diskusage.toRegex(), app!!.pkg)
+                moveIntoPackage(app, media, cacheDir, "Cache", FileSystemPackage.ChildType.CACHE, blockSize)
+            } catch (ignored: IOException) {
+            }
+        }
+        for (a in apps) {
+            val app = a as FileSystemPackage?
+            try {
+                val dir = codeCacheDir.canonicalPath.replace(diskusage.toRegex(), app!!.pkg)
+                moveIntoPackage(app, media, dir, "CodeCache", FileSystemPackage.ChildType.CACHE, blockSize)
+            } catch (ignored: IOException) {
+            }
+        }
+        for (a in apps) {
+            val app = a as FileSystemPackage?
+            try {
+                val dir = externalCacheDir!!.canonicalPath.replace(diskusage.toRegex(), app!!.pkg)
+                moveIntoPackage(app, media, dir, "ExternalCache", FileSystemPackage.ChildType.CACHE, blockSize)
+            } catch (ignored: IOException) {
+            }
+        }
+        for (a in apps) {
+            val app = a as FileSystemPackage?
+            try {
+                val dir = dataDir.canonicalPath.replace(diskusage.toRegex(), app!!.pkg)
+                moveIntoPackage(app, media, dir, "Data", FileSystemPackage.ChildType.DATA, blockSize)
+            } catch (ignored: IOException) {
+            }
+        }
+        for (a in apps) {
+            val app = a as FileSystemPackage?
+            try {
+                val dir = filesDir.canonicalPath.replace(diskusage.toRegex(), app!!.pkg)
+                moveIntoPackage(app, media, dir, "InternalFiles", FileSystemPackage.ChildType.DATA, blockSize)
+            } catch (ignored: IOException) {
+            }
+        }
+        for (a in apps) {
+            val app = a as FileSystemPackage?
+            try {
+                val dir = getExternalFilesDir(null)!!.canonicalPath.replace(
+                    diskusage.toRegex(),
+                    app!!.pkg
+                )
+                moveIntoPackage(app, media, dir, "Files", FileSystemPackage.ChildType.DATA, blockSize)
+            } catch (ignored: IOException) {
+            }
+        }
+        for (a in apps) {
+            val app = a as FileSystemPackage?
+            try {
+                for (mediaDir in externalMediaDirs) {
+                    val dir = mediaDir.canonicalPath.replace(diskusage.toRegex(), app!!.pkg)
+                    moveIntoPackage(app, media, dir, "MediaFiles", FileSystemPackage.ChildType.DATA, blockSize)
+                }
+            } catch (ignored: IOException) {
+            }
+        }
+        for (a in apps) {
+            val app = a as FileSystemPackage?
+            try {
+                for (mediaDir in obbDirs) {
+                    val dir = mediaDir.canonicalPath.replace(diskusage.toRegex(), app!!.pkg)
+                    moveIntoPackage(app, media, dir, "Obb", FileSystemPackage.ChildType.CODE, blockSize)
+                }
+            } catch (ignored: IOException) {
+            }
+        }
+        for (a in apps) {
+            val app = a as FileSystemPackage?
+            app!!.applyFilter(blockSize)
+        }
+        Arrays.sort(apps, FileSystemEntry.COMPARE)
+    }
+
+    private fun moveIntoPackage(
+        pkg: FileSystemPackage?,
+        root: FileSystemRoot,
+        path: String?, newName: String?,
+        type: FileSystemPackage.ChildType?,
+        blockSize: Long
+    ) {
+        val e = root.getByAbsolutePath(path!!)
+        if (e != null) {
+            e.remove(blockSize)
+            val newRoot = makeNode(newName, path, true)
+            e.children?.let { newRoot.setChildren(it, blockSize) }
+            pkg!!.addPublicChild(newRoot, type!!, blockSize)
+        }
+    }
+
+    private fun goToView(scannedDirectories : FileSystemSuperRoot) {
+        val bundle = Bundle()
+        bundle.putBinder("object_value", ObjectWrapperForBinder(scannedDirectories))
+        startActivity(Intent(this, DiskViewActivity::class.java).putExtras(bundle))
+        Log.d(TAG, "original object=$scannedDirectories")
     }
 
     private suspend fun loadApps2SD(blockSize: Long, updateProgress: (Float, String) -> Unit): Array<FileSystemEntry>? {
