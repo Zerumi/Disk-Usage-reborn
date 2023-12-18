@@ -40,7 +40,7 @@ class FileSystemPackage(
     }
 
     init {
-        var codeSize = codeSize
+        var codeSizeInit = codeSize
         this.pkg = pkg
         this.cacheSize = cacheSize
         this.dataSize = dataSize - cacheSize
@@ -48,14 +48,14 @@ class FileSystemPackage(
         if (flags and ApplicationInfo.FLAG_SYSTEM != 0
             && flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP == 0
         ) {
-            codeSize = 0
+            codeSizeInit = 0
         }
 
-        // TODO: not sure what happens here
+        // debug code
         if (flags and ApplicationInfo.FLAG_EXTERNAL_STORAGE != 0) {
-            codeSize = 0
+            codeSizeInit = 0
         }
-        this.codeSize = codeSize
+        this.codeSize = codeSizeInit
     }
 
     fun applyFilter(blockSize: Long) {
@@ -82,7 +82,7 @@ class FileSystemPackage(
             e.parent = this
         }
         children = entries.toArray(arrayOf())
-        Arrays.sort(children, COMPARE)
+        children?.let { Arrays.sort(it, COMPARE) }
     }
 
     override fun create(): FileSystemEntry {
