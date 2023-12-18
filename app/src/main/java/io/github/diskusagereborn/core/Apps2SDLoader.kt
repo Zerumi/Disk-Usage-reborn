@@ -48,6 +48,7 @@ class Apps2SDLoader(private val loadActivity: LoadActivity, val callUpdate: (Flo
         val entries = ArrayList<FileSystemEntry>()
         val packageManager = loadActivity.applicationContext.packageManager
         val packages: MutableSet<String> = HashSet()
+        val size : Float = queryUsageStats.size.toFloat()
         for (s in queryUsageStats) {
             packages.add(s.packageName)
         }
@@ -72,7 +73,7 @@ class Apps2SDLoader(private val loadActivity: LoadActivity, val callUpdate: (Flo
                 p.applyFilter(blockSize)
                 entries.add(p)
                 numLoadedPackages++
-                callUpdate(0.3F, appName)
+                callUpdate(numLoadedPackages / size, appName)
                 delay(1)
             } catch (e: PackageManager.NameNotFoundException) {
                 LOGGER.d("Failed to get package", e)
