@@ -128,9 +128,7 @@ open class FileSystemEntry protected constructor(@JvmField var parent: FileSyste
         return FileSystemEntry(null, name)
     }
 
-    object SearchInterruptedException : RuntimeException() {
-        private const val serialVersionUID = -3986013022885904101L
-    }
+    object SearchInterruptedException : RuntimeException()
 
     fun copy(): FileSystemEntry {
         if (Thread.interrupted()) throw SearchInterruptedException
@@ -393,11 +391,11 @@ open class FileSystemEntry protected constructor(@JvmField var parent: FileSyste
 
     /**
      * Find depth of 'entry' in current element.
-     * @param entry file system entry
+     * @param sourceEntry file system entry
      * @return 1 for depth equal 1 and so on
      */
-    fun depth(entry: FileSystemEntry): Int {
-        var entry : FileSystemEntry? = entry
+    fun depth(sourceEntry: FileSystemEntry): Int {
+        var entry : FileSystemEntry? = sourceEntry
         var d = 0
         val root = this
         while (entry != null && entry !== root) {
@@ -418,9 +416,9 @@ open class FileSystemEntry protected constructor(@JvmField var parent: FileSyste
         var children0 = children
         // Log.d("DiskUsage", "Starting entry search at " + entry.name);
         for (depth in 0 until maxDepth) {
-            val nchildren = children0?.size ?: return null
+            val nChildren = children0?.size ?: return null
             // Log.d("DiskUsage", "  Entry = " + entry.name);
-            for (c in 0 until nchildren) {
+            for (c in 0 until nChildren) {
                 val e = children0?.get(c)
                 val size = e!!.sizeForRendering
                 if (currOffset + size < offset) {
@@ -441,11 +439,11 @@ open class FileSystemEntry protected constructor(@JvmField var parent: FileSyste
     /**
      * Returns offset in bytes (world coordinates) from start of this
      * object to the start of 'cursor' object.
-     * @param cursor file system entry cursor
+     * @param sourceCursor file system entry cursor
      * @return offset in bytes
      */
-    fun getOffset(cursor: FileSystemEntry): Long {
-        var cursor : FileSystemEntry? = cursor
+    fun getOffset(sourceCursor: FileSystemEntry): Long {
+        var cursor : FileSystemEntry? = sourceCursor
         var offset: Long = 0
         var dir: FileSystemEntry?
         val root = this
@@ -560,8 +558,6 @@ open class FileSystemEntry protected constructor(@JvmField var parent: FileSyste
         private val fill_bg = Paint()
         private val textPaintFolder = Paint()
         private val textPaintFile = Paint()
-        private var ascent = 0f
-        private var descent = 0f
         private var n_bytes: String? = null
         private var n_kilobytes: String? = null
         private var n_megabytes: String? = null
@@ -573,20 +569,6 @@ open class FileSystemEntry protected constructor(@JvmField var parent: FileSyste
         private var dir_name_size_num_dirs: String? = null
         private var dir_empty: String? = null
         private var dir_name_size: String? = null
-        @JvmField
-        var deletedEntry: FileSystemEntry? = null
-
-        /**
-         * Font size. Also accessed from FileSystemView.
-         */
-        @JvmField
-        var fontSize = 0f
-
-        /**
-         * Width of one element. Setup from FileSystemView when geometry changes.
-         */
-        @JvmField
-        var elementWidth = 0
 
         init {
             bg.color = Color.parseColor("#060118")
@@ -1076,12 +1058,12 @@ open class FileSystemEntry protected constructor(@JvmField var parent: FileSyste
          * Calculate size string for specified file length in bytes.
          * Currently used by delete activity preview file list loader.
          *
-         * @param sz file size in bytes
+         * @param sourceSz file size in bytes
          * @return formated size string
          */
         @JvmStatic
-        fun calcSizeString(sz: Float): String {
-            var sz = sz
+        fun calcSizeString(sourceSz: Float): String {
+            var sz = sourceSz
             if (sz < 1024 * 1024 * 10) {
                 if (sz < 1024 * 1024) {
                     if (sz < 1024) {
@@ -1103,7 +1085,6 @@ open class FileSystemEntry protected constructor(@JvmField var parent: FileSyste
             )
         }
 
-        const val padding = 4
         @JvmStatic
         fun setupStrings(context: Context) {
             if (n_bytes != null) return
@@ -1118,22 +1099,6 @@ open class FileSystemEntry protected constructor(@JvmField var parent: FileSyste
             dir_name_size_num_dirs = context.getString(R.string.dir_name_size_num_dirs)
             dir_empty = context.getString(R.string.dir_empty)
             dir_name_size = context.getString(R.string.dir_name_size)
-        }
-
-        @JvmStatic
-        fun updateFontsLegacy(context: Context) {
-            var textSize = context.resources.displayMetrics.scaledDensity * 12 + 0.5f
-            if (textSize < 10) textSize = 10f
-            updateFonts(textSize)
-        }
-
-        @JvmStatic
-        fun updateFonts(textSize: Float) {
-            textPaintFile.textSize = textSize
-            textPaintFolder.textSize = textSize
-            ascent = textPaintFolder.ascent()
-            descent = textPaintFolder.descent()
-            fontSize = descent - ascent
         }
     }
 }

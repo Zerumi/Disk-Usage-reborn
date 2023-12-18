@@ -47,13 +47,6 @@ class Scanner(
     private var pos: Long = 0
     private var lastCreatedFile: FileSystemEntry? = null
     private var dev: Long = 0
-    fun lastCreatedFile(): FileSystemEntry? {
-        return lastCreatedFile
-    }
-
-    fun pos(): Long {
-        return pos
-    }
 
     private class SmallList(
         var parent: FileSystemEntry?,
@@ -277,7 +270,7 @@ class Scanner(
                 smallFilesEntry.encodedSize = -1
             }
             thisNode.children = children.toTypedArray<FileSystemEntry?>()
-            Arrays.sort(thisNode.children, FileSystemEntry.COMPARE)
+            thisNode.children?.let { Arrays.sort(it, FileSystemEntry.COMPARE) }
             if (smallFilesEntry != null) {
                 smallFilesEntry.encodedSize = smallFilesEntrySize
             }

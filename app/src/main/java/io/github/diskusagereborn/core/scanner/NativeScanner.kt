@@ -46,15 +46,6 @@ class NativeScanner(
     private var pos: Long = 0
     private var lastCreatedFile: FileSystemEntry? = null
 
-    // private volatile int deepDepth = 0;
-    fun lastCreatedFile(): FileSystemEntry? {
-        return lastCreatedFile
-    }
-
-    fun pos(): Long {
-        return pos
-    }
-
     private class SmallList(
         var parent: FileSystemEntry?,
         var children: Array<FileSystemEntry?>,
@@ -382,7 +373,7 @@ class NativeScanner(
                             smallFilesEntry.encodedSize = -1
                         }
                         s.thisNode!!.children = s.children!!.toTypedArray<FileSystemEntry?>()
-                        Arrays.sort(s.thisNode!!.children, FileSystemEntry.COMPARE)
+                        s.thisNode!!.children?.let { Arrays.sort(it, FileSystemEntry.COMPARE) }
                         if (smallFilesEntry != null) {
                             smallFilesEntry.encodedSize = smallFilesEntrySize
                         }
@@ -481,7 +472,7 @@ class NativeScanner(
                             smallFilesEntry.encodedSize = -1
                         }
                         s.thisNode!!.children = s.children!!.toTypedArray<FileSystemEntry?>()
-                        Arrays.sort(s.thisNode!!.children, FileSystemEntry.COMPARE)
+                        s.thisNode!!.children?.let { Arrays.sort(it, FileSystemEntry.COMPARE) }
                         if (smallFilesEntry != null) {
                             smallFilesEntry.encodedSize = smallFilesEntrySize
                         }
@@ -538,7 +529,7 @@ class NativeScanner(
                             smallFilesEntry.encodedSize = -1
                         }
                         s.thisNode!!.children = s.children!!.toTypedArray<FileSystemEntry?>()
-                        Arrays.sort(s.thisNode!!.children, FileSystemEntry.COMPARE)
+                        s.thisNode!!.children?.let { Arrays.sort(it, FileSystemEntry.COMPARE) }
                         if (smallFilesEntry != null) {
                             smallFilesEntry.encodedSize = smallFilesEntrySize
                         }
@@ -700,7 +691,7 @@ class NativeScanner(
                 smallFilesEntry.encodedSize = -1
             }
             thisNode.children = children.toTypedArray<FileSystemEntry?>()
-            Arrays.sort(thisNode.children, FileSystemEntry.COMPARE)
+            thisNode.children?.let { Arrays.sort(it, FileSystemEntry.COMPARE) }
             if (smallFilesEntry != null) {
                 smallFilesEntry.encodedSize = smallFilesEntrySize
             }
