@@ -57,18 +57,10 @@ open class FileSystemEntry protected constructor(@JvmField var parent: FileSyste
 
     var children: Array<FileSystemEntry?>? = null
 
-    //  public String sizeString;
-    //private var drawingCache: DrawingCache? = null
     val sizeInBlocks: Long
         get() = encodedSize shr blockOffset
     private val sizeForRendering: Long
         get() = encodedSize and blockMask.inv()
-
-    /* fun clearDrawingCache() {
-        if (drawingCache != null) {
-            drawingCache!!.resetSizeString()
-        }
-    } */
 
     private fun makeBytesPart(size: Long): Long {
         if (size < 1024) return size
@@ -217,132 +209,7 @@ open class FileSystemEntry protected constructor(@JvmField var parent: FileSyste
             return null
         }
 
-    /* private fun getDrawingCache(): DrawingCache? {
-        if (drawingCache != null) return drawingCache
-        val drawingCache = DrawingCache(this)
-        this.drawingCache = drawingCache
-        return drawingCache
-    } */
-
-    /* fun paintGPU(
-        rt: RenderingThread,
-        bounds: Rect, cursor: Cursor, viewTop: Long,
-        viewDepth: Float, yscale: Float, screenHeight: Int,
-        numSpecialEntries: Int
-    ) {
-        // scale conversion:
-        // window_y = yscale * world_y
-        // world_y  = window_y / yscale
-
-        // offset conversion:
-        // window_y = yscale * (world_y  - rootOffset)
-        // world_y  = window_y / yscale + rootOffset
-        val viewLeft = (viewDepth * elementWidth).toInt()
-
-        // screen clip area to world conversion:
-        val clipTop = (bounds.top / yscale).toLong() + viewTop
-        val clipBottom = (bounds.bottom / yscale).toLong() + viewTop
-        val clipLeft = bounds.left + viewLeft
-        val clipRight = bounds.right + viewLeft
-        val xoffset = -viewLeft.toFloat()
-        val yoffset = -viewTop * yscale
-
-        // X coords:
-        // xoffset - screen position of current object on the screen
-        // clip_x0, clip_x1 - clip area in coords of current object
-        // screen_clip_x0 = xoffset + clip_x0
-        // screen_clip_x1 = xoffset + clip_x1
-
-        // Y coords:
-        // yoffset - screen position of current object on the screen
-        // clip_y0, clip_y1 - clip area in world coords relative to current object
-        // screen_clip_y0 = yscale * (clip_y0 - elementOffset)
-        // screen_clip_y1 = yscale * (clip_y1 - elementOffset)
-        paintGPU(
-            sizeForRendering,
-            children,
-            rt,
-            xoffset,
-            yoffset,
-            yscale,
-            clipLeft.toLong(),
-            clipRight.toLong(),
-            clipTop,
-            clipBottom,
-            screenHeight
-        )
-        paintSpecialGPU(
-            sizeForRendering, children, rt, xoffset, yoffset, yscale, clipLeft.toLong(),
-            clipTop, clipBottom, screenHeight, numSpecialEntries
-        )
-
-        // paint position
-        val cursorLeft = cursor.depth * elementWidth + xoffset
-        val cursorTop = (cursor.top - viewTop) * yscale
-        val cursorRight = cursorLeft + elementWidth
-        val cursorBottom = cursorTop + cursor.position!!.sizeForRendering * yscale
-        rt.cursorSquare.drawFrame(cursorLeft, cursorTop, cursorRight, cursorBottom)
-    }
-
-    fun paint(
-        canvas: Canvas, bounds: Rect, cursor: Cursor, viewTop: Long,
-        viewDepth: Float, yscale: Float, screenHeight: Int, numSpecialEntries: Int
-    ) {
-        // scale conversion:
-        // window_y = yscale * world_y
-        // world_y  = window_y / yscale
-
-        // offset conversion:
-        // window_y = yscale * (world_y  - rootOffset)
-        // world_y  = window_y / yscale + rootOffset
-        val viewLeft = (viewDepth * elementWidth).toInt()
-
-        // screen clip area to world conversion:
-        val clipTop = (bounds.top / yscale).toLong() + viewTop
-        val clipBottom = (bounds.bottom / yscale).toLong() + viewTop
-        val clipLeft = bounds.left + viewLeft
-        val clipRight = bounds.right + viewLeft
-        val xoffset = -viewLeft.toFloat()
-        val yoffset = -viewTop * yscale
-
-        // X coords:
-        // xoffset - screen position of current object on the screen
-        // clip_x0, clip_x1 - clip area in coords of current object
-        // screen_clip_x0 = xoffset + clip_x0
-        // screen_clip_x1 = xoffset + clip_x1
-
-        // Y coords:
-        // yoffset - screen position of current object on the screen
-        // clip_y0, clip_y1 - clip area in world coords relative to current object
-        // screen_clip_y0 = yscale * (clip_y0 - elementOffset)
-        // screen_clip_y1 = yscale * (clip_y1 - elementOffset)
-        paint(
-            sizeForRendering,
-            children,
-            canvas,
-            xoffset,
-            yoffset,
-            yscale,
-            clipLeft.toLong(),
-            clipRight.toLong(),
-            clipTop,
-            clipBottom,
-            screenHeight
-        )
-        paintSpecial(
-            sizeForRendering, children, canvas, xoffset, yoffset, yscale, clipLeft.toLong(),
-            clipTop, clipBottom, screenHeight, numSpecialEntries
-        )
-
-        // paint position
-        val cursorLeft = cursor.depth * elementWidth + xoffset
-        val cursorTop = (cursor.top - viewTop) * yscale
-        val cursorRight = cursorLeft + elementWidth
-        val cursorBottom = cursorTop + cursor.position!!.sizeForRendering * yscale
-        canvas.drawRect(cursorLeft, cursorTop, cursorRight, cursorBottom, cursor_fg)
-    } */
-
-    private fun sizeString(): String {
+    fun sizeString(): String {
         return calcSizeStringFromEncoded(encodedSize)
     }
 
