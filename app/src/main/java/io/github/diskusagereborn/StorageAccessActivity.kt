@@ -54,6 +54,7 @@ class StorageAccessActivity : ComponentActivity() {
 
     @RequiresApi(Build.VERSION_CODES.R)
     private fun requestAccessR() {
+        startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
         startActivity(Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION))
     }
 
