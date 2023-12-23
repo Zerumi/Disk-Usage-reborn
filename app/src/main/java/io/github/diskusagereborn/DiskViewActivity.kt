@@ -32,19 +32,25 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.MultiParagraph
 import androidx.compose.ui.text.TextLayoutInput
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import io.github.diskusagereborn.core.fs.entity.FileSystemSuperRoot
 import io.github.diskusagereborn.ui.diskview.FileRectangle
 import io.github.diskusagereborn.ui.diskview.FileRectangleInitializer
 import io.github.diskusagereborn.ui.theme.DiskUsageTheme
 import io.github.diskusagereborn.utils.ObjectWrapperForBinder
+import java.time.format.TextStyle
+import kotlin.math.roundToInt
 
 
 class DiskViewActivity : ComponentActivity() {
@@ -118,8 +124,9 @@ fun UsageView(rectangles : Array<FileRectangle>) {
                 // apply other transformations like rotation and zoom
                 // on the pizza slice emoji
                 .graphicsLayer(
+                    scaleX = scale,
                     scaleY = scale,
-                    translationX = offset.x,
+                    translationX = offset.x * scale,
                     translationY = offset.y * scale
                 )
                 // add transformable to listen to multitouch transformation events
@@ -141,11 +148,21 @@ fun UsageView(rectangles : Array<FileRectangle>) {
                         color = colorsByDepth[if (rectangle.depthLevel > 5) 5 else rectangle.depthLevel],
                         size = Size(rectangle.width, rectangle.height),
                     )
-                    /* drawText(
-                        textMeasurer = textMeasurer,
-                        text = rectangle.name,
-                        //topLeft = Offset(rectangle.offsetX, rectangle.offsetY)
-                    ) */
+                    val textLayoutResult: TextLayoutResult =
+                        textMeasurer.measure(
+                            text = AnnotatedString("${rectangle.name}\n${rectangle.displaySize}"),
+                            style = androidx.compose.ui.text.TextStyle(
+                                fontSize = 7.sp,
+                                fontWeight = FontWeight.Bold
+                            ),
+                            constraints = Constraints.fixed(rectangle.width.roundToInt(), rectangle.height.roundToInt())
+                        )
+                    if (!textLayoutResult.hasVisualOverflow) {
+                        drawText(
+                            textLayoutResult = textLayoutResult,
+                            topLeft = Offset(rectangle.offsetX, rectangle.offsetY)
+                        )
+                    }
                 }
             }
         }
