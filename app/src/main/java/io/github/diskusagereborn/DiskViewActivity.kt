@@ -32,6 +32,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.MultiParagraph
+import androidx.compose.ui.text.TextLayoutInput
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextMeasurer
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import io.github.diskusagereborn.core.fs.entity.FileSystemSuperRoot
 import io.github.diskusagereborn.ui.diskview.FileRectangle
@@ -87,8 +94,9 @@ val colorsByDepth : Array<Color> =
     )
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTextApi::class)
 fun UsageView(rectangles : Array<FileRectangle>) {
+    val textMeasurer = rememberTextMeasurer()
     // set up all transformation states
     var scale by remember { mutableStateOf(1f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
@@ -100,7 +108,7 @@ fun UsageView(rectangles : Array<FileRectangle>) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text("DiskUsage Reborn")
+                    Text("DiskUsage Reborn") // todo useful space for information
                 }
             )
         }
@@ -110,10 +118,9 @@ fun UsageView(rectangles : Array<FileRectangle>) {
                 // apply other transformations like rotation and zoom
                 // on the pizza slice emoji
                 .graphicsLayer(
-                    scaleX = scale,
                     scaleY = scale,
                     translationX = offset.x,
-                    translationY = offset.y
+                    translationY = offset.y * scale
                 )
                 // add transformable to listen to multitouch transformation events
                 // after offset
@@ -127,13 +134,18 @@ fun UsageView(rectangles : Array<FileRectangle>) {
                         topLeft = Offset(rectangle.offsetX, rectangle.offsetY),
                         color = Color.Black,
                         size = Size(rectangle.width, rectangle.height),
-                        style = Stroke(width = 2.dp.toPx()),
+                        style = Stroke(width = 2.dp.toPx()), // todo outside border, to prevent small rectangles hiding
                     )
                     drawRect(
-                            topLeft = Offset(rectangle.offsetX, rectangle.offsetY),
-                        color = colorsByDepth[rectangle.depthLevel],
+                        topLeft = Offset(rectangle.offsetX, rectangle.offsetY),
+                        color = colorsByDepth[if (rectangle.depthLevel > 5) 5 else rectangle.depthLevel],
                         size = Size(rectangle.width, rectangle.height),
                     )
+                    /* drawText(
+                        textMeasurer = textMeasurer,
+                        text = rectangle.name,
+                        //topLeft = Offset(rectangle.offsetX, rectangle.offsetY)
+                    ) */
                 }
             }
         }
@@ -186,7 +198,8 @@ fun Prev() {
                     brush = Brush.linearGradient(listOf(Color.LightGray, Color.DarkGray)),
                     size = Size(300F, 300F)
                 )
-            }
+            } // todo click on rectangle
+            // fixme https://stackoverflow.com/questions/68363029/how-to-add-click-events-to-canvas-in-jetpack-compose
         }
     }
 }
