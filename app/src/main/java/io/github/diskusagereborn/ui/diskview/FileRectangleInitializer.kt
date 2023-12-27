@@ -4,7 +4,7 @@ import io.github.diskusagereborn.core.fs.entity.FileSystemEntry
 import io.github.diskusagereborn.core.fs.entity.FileSystemSuperRoot
 
 
-class FileRectangleInitializer(val maxHeight : Int, val root : FileSystemSuperRoot) {
+class FileRectangleInitializer(private val maxHeight : Int, val root : FileSystemSuperRoot) {
 
     companion object {
         private const val WIDTH = 300F
@@ -49,5 +49,4 @@ class FileRectangleInitializer(val maxHeight : Int, val root : FileSystemSuperRo
 
         currentOffsetsX[currentDepth] = currentOffsetsX[currentDepth]!! + calculatedHeight
     }
-
 }

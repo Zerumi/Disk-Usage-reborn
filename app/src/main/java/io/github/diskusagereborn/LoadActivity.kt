@@ -62,6 +62,7 @@ import io.github.diskusagereborn.core.scanner.Scanner
 import io.github.diskusagereborn.ui.theme.DiskUsageTheme
 import io.github.diskusagereborn.utils.Logger.Companion.LOGGER
 import io.github.diskusagereborn.utils.ObjectWrapperForBinder
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.Arrays
@@ -99,6 +100,8 @@ class LoadActivity : ComponentActivity() {
         startLoadDirectories(updateProgress = updateProgress)
     }
     private suspend fun startLoadDirectories(updateProgress: (Float, String) -> Unit) {
+        updateProgress(0F, "Loading directories...")
+        delay(1)
         val mountPoint = getForKey(this, key)
         val stats = FileSystemStats(mountPoint!!)
         val heap = memoryQuota
@@ -300,18 +303,8 @@ fun LinearDeterminateIndicator(
     onDismissRequest : () -> Unit) {
     var currentProgress by remember { mutableStateOf(0f) }
     var loading by remember { mutableStateOf(false) }
-    var currentFile by remember { mutableStateOf("") }
+    var currentFile by remember { mutableStateOf("Initializing scanner...") }
     val scope = rememberCoroutineScope() // Create a coroutine scope
-
-    LaunchedEffect(scope) {
-        scope.launch {
-            progressBarUpdater { progress, string ->
-                currentProgress = progress
-                currentFile = string
-            }
-            loading = false // Reset loading when the coroutine finishes
-        }
-    }
 
     Dialog(onDismissRequest = onDismissRequest) {
         Card(
@@ -354,6 +347,16 @@ fun LinearDeterminateIndicator(
                     )
                 }
             }
+        }
+    }
+
+    LaunchedEffect(scope) {
+        scope.launch {
+            progressBarUpdater { progress, string ->
+                currentProgress = progress
+                currentFile = string
+            }
+            loading = false // Reset loading when the coroutine finishes
         }
     }
 }
