@@ -11,6 +11,7 @@ import android.view.WindowInsets
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,6 +33,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.MultiParagraph
@@ -42,6 +45,7 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.diskusagereborn.core.fs.entity.FileSystemSuperRoot
@@ -110,6 +114,7 @@ fun UsageView(rectangles : Array<FileRectangle>) {
         scale *= zoomChange
         offset += offsetChange
     }
+    var size by remember { mutableStateOf(IntSize.Zero) }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -121,19 +126,41 @@ fun UsageView(rectangles : Array<FileRectangle>) {
     ) { innerPadding ->
         Surface(
             modifier = Modifier
-                // apply other transformations like rotation and zoom
-                // on the pizza slice emoji
                 .graphicsLayer(
                     scaleX = scale,
                     scaleY = scale,
                     translationX = offset.x * scale,
                     translationY = offset.y * scale
                 )
-                // add transformable to listen to multitouch transformation events
-                // after offset
                 .transformable(state = state)
                 .fillMaxSize()
-                .padding(innerPadding),
+                .onSizeChanged {
+                    size = it
+                }
+                .padding(innerPadding)
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onDoubleTap = { tapOffset ->
+                            for (rect in rectangles) {
+                                if (rect.rectangle.contains(tapOffset)) {
+                                    val actualScale = size.height / rect.height
+                                    val actualOffset = Offset(
+                                        -(rect.offsetX),
+                                        -(rect.offsetY)
+                                    ) / actualScale
+                                    val consumedSize = Offset(
+                                        (rect.width * (actualScale - 1F)),
+                                        (rect.height * (actualScale - 1F)),
+                                    ) / actualScale
+                                    scale = actualScale
+                                    offset = actualOffset
+                                    offset += consumedSize
+                                    break
+                                }
+                            }
+                        }
+                    )
+                },
         ) {
             Canvas(modifier = Modifier.fillMaxSize()) {
                 for (rectangle in rectangles) {
@@ -141,7 +168,7 @@ fun UsageView(rectangles : Array<FileRectangle>) {
                         topLeft = Offset(rectangle.offsetX, rectangle.offsetY),
                         color = Color.Black,
                         size = Size(rectangle.width, rectangle.height),
-                        style = Stroke(width = 2.dp.toPx()), // todo outside border, to prevent small rectangles hiding
+                        style = Stroke(width = 1.dp.toPx()), // todo outside border, to prevent small rectangles hiding
                     )
                     drawRect(
                         topLeft = Offset(rectangle.offsetX, rectangle.offsetY),
@@ -152,12 +179,17 @@ fun UsageView(rectangles : Array<FileRectangle>) {
                         textMeasurer.measure(
                             text = AnnotatedString("${rectangle.name}\n${rectangle.displaySize}"),
                             style = androidx.compose.ui.text.TextStyle(
-                                fontSize = 7.sp,
+                                fontSize = (if (rectangle.calculatedFontSize == null)
+                                    (24F / scale) else rectangle.calculatedFontSize!!.value)
+                                    .coerceAtLeast((24F / scale))
+                                    .toSp(),
                                 fontWeight = FontWeight.Bold
                             ),
                             constraints = Constraints.fixed(rectangle.width.roundToInt(), rectangle.height.roundToInt())
                         )
                     if (!textLayoutResult.hasVisualOverflow) {
+                        if (rectangle.calculatedFontSize == null)
+                            rectangle.calculatedFontSize = (24F / scale).toSp()
                         drawText(
                             textLayoutResult = textLayoutResult,
                             topLeft = Offset(rectangle.offsetX, rectangle.offsetY)
@@ -168,6 +200,7 @@ fun UsageView(rectangles : Array<FileRectangle>) {
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @androidx.compose.ui.tooling.preview.Preview
@@ -203,12 +236,13 @@ fun Prev() {
                 .transformable(state = state)
                 .fillMaxSize()
                 .padding(innerPadding),
+
         ) {
             Canvas(modifier = Modifier.fillMaxSize()) {
                 drawRect(
                     topLeft = Offset(0F, 0F),
                     brush = Brush.linearGradient(listOf(Color.LightGray, Color.DarkGray)),
-                    size = Size(300F, 300F)
+                    size = Size(300F.dp.toPx(), 300F)
                 )
                 drawRect(
                     topLeft = Offset(400F, 100F),
