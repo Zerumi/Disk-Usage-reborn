@@ -109,12 +109,15 @@ fun UsageView(rectangles : Array<FileRectangle>) {
         scale *= zoomChange
         offset += offsetChange
     }
+    var selectedRectangle : FileRectangle by remember {
+        mutableStateOf(rectangles.find { x -> x.depthLevel == 0 }!!)
+    }
     var size by remember { mutableStateOf(IntSize.Zero) }
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text("DiskUsage Reborn") // todo useful space for information
+                    Text("${selectedRectangle.name} / ${selectedRectangle.displaySize}")
                 }
             )
         }
@@ -138,6 +141,7 @@ fun UsageView(rectangles : Array<FileRectangle>) {
                         onDoubleTap = { tapOffset ->
                             for (rect in rectangles) {
                                 if (rect.rectangle.contains(tapOffset)) {
+                                    selectedRectangle = rect
                                     val actualScale = size.height / rect.height
                                     val actualOffset = Offset(
                                         -rect.offsetX,
