@@ -37,23 +37,18 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
-import androidx.compose.ui.text.MultiParagraph
-import androidx.compose.ui.text.TextLayoutInput
 import androidx.compose.ui.text.TextLayoutResult
-import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import io.github.diskusagereborn.core.fs.entity.FileSystemSuperRoot
 import io.github.diskusagereborn.ui.diskview.FileRectangle
 import io.github.diskusagereborn.ui.diskview.FileRectangleInitializer
 import io.github.diskusagereborn.ui.theme.DiskUsageTheme
 import io.github.diskusagereborn.utils.ObjectWrapperForBinder
-import java.time.format.TextStyle
 import kotlin.math.roundToInt
 
 
@@ -168,7 +163,9 @@ fun UsageView(rectangles : Array<FileRectangle>) {
                         topLeft = Offset(rectangle.offsetX, rectangle.offsetY),
                         color = Color.Black,
                         size = Size(rectangle.width, rectangle.height),
-                        style = Stroke(width = 1.dp.toPx()), // todo outside border, to prevent small rectangles hiding
+                        style = Stroke(
+                            width = 1F.coerceAtMost(rectangle.height * 0.05F).dp.toPx()
+                        ),
                     )
                     drawRect(
                         topLeft = Offset(rectangle.offsetX, rectangle.offsetY),
@@ -249,8 +246,7 @@ fun Prev() {
                     brush = Brush.linearGradient(listOf(Color.LightGray, Color.DarkGray)),
                     size = Size(300F, 300F)
                 )
-            } // todo click on rectangle
-            // fixme https://stackoverflow.com/questions/68363029/how-to-add-click-events-to-canvas-in-jetpack-compose
+            }
         }
     }
 }
