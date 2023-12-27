@@ -140,12 +140,12 @@ fun UsageView(rectangles : Array<FileRectangle>) {
                                 if (rect.rectangle.contains(tapOffset)) {
                                     val actualScale = size.height / rect.height
                                     val actualOffset = Offset(
-                                        -(rect.offsetX),
-                                        -(rect.offsetY)
+                                        -rect.offsetX,
+                                        -rect.offsetY
                                     ) / actualScale
                                     val consumedSize = Offset(
-                                        (rect.width * (actualScale - 1F)),
-                                        (rect.height * (actualScale - 1F)),
+                                        rect.width * (actualScale - 1F),
+                                        rect.height * (actualScale - 1F),
                                     ) / actualScale
                                     scale = actualScale
                                     offset = actualOffset
@@ -177,8 +177,8 @@ fun UsageView(rectangles : Array<FileRectangle>) {
                             text = AnnotatedString("${rectangle.name}\n${rectangle.displaySize}"),
                             style = androidx.compose.ui.text.TextStyle(
                                 fontSize = (if (rectangle.calculatedFontSize == null)
-                                    (24F / scale) else rectangle.calculatedFontSize!!.value)
-                                    .coerceAtLeast((24F / scale))
+                                    24F / scale else rectangle.calculatedFontSize!!.value)
+                                    .coerceAtLeast(24F / scale)
                                     .toSp(),
                                 fontWeight = FontWeight.Bold
                             ),
