@@ -105,10 +105,10 @@ class LoadActivity : ComponentActivity() {
         val stats = FileSystemStats(mountPoint!!)
         val heap = memoryQuota
         var rootElement: FileSystemEntry = try {
-            val scanner = NativeScanner(stats.blockSize, stats.busyBlocks, heap)
+            val scanner = NativeScanner(stats.blockSize, stats.busyBlocks, heap, updateProgress)
             scanner.scan(mountPoint)!!
         } catch (e: Exception) {
-            val scanner = Scanner(20, stats.blockSize, stats.busyBlocks, heap)
+            val scanner = Scanner(20, stats.blockSize, stats.busyBlocks, heap, updateProgress)
             scanner.scan(createRoot(mountPoint.root))!!
         }
 

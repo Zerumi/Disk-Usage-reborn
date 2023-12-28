@@ -25,6 +25,7 @@ import io.github.diskusagereborn.core.fs.entity.FileSystemFile
 import io.github.diskusagereborn.core.fs.mount.MountPoint
 import io.github.diskusagereborn.core.fs.entity.FileSystemEntry
 import io.github.diskusagereborn.utils.Logger.Companion.LOGGER
+import kotlinx.coroutines.delay
 import java.io.IOException
 import java.io.InputStream
 import java.util.Arrays
@@ -33,7 +34,8 @@ import java.util.PriorityQueue
 class NativeScanner(
     private val blockSize: Long,
     allocatedBlocks: Long,
-    private val maxHeapSize: Int
+    private val maxHeapSize: Int,
+    private val callUpdate : suspend (Float, String) -> Unit
 ) {
     private val blockSizeIn512Bytes: Long = blockSize / 512
     private val sizeThreshold: Long
@@ -152,6 +154,8 @@ class NativeScanner(
             }
         }
 
+    private val totalBlocks = allocatedBlocks
+
     init {
         sizeThreshold = (allocatedBlocks shl FileSystemEntry.blockOffset) / (maxHeapSize / 2)
         //    this.blockAllowance = (allocatedBlocks << FileSystemEntry.blockOffset) / 2;
@@ -176,7 +180,7 @@ class NativeScanner(
     }
 
     @Throws(IOException::class, InterruptedException::class)
-    fun scan(mountPoint: MountPoint): FileSystemEntry? {
+    suspend fun scan(mountPoint: MountPoint): FileSystemEntry? {
         `is` = mountPoint.root?.let { NativeScannerStream.Factory.create(it, mountPoint.isRootRequired) }
         // while (getByte() != 0);
         val type = type
@@ -247,7 +251,7 @@ class NativeScanner(
     // of real one.
     @SuppressLint("DefaultLocale")
     @Throws(IOException::class)
-    private fun scanDirectorySoftStack(
+    private suspend fun scanDirectorySoftStack(
         parent: FileSystemEntry?,
         name: String,
         depth: Int
@@ -298,6 +302,8 @@ class NativeScanner(
                             )
                             pos += createdNode!!.sizeInBlocks
                             lastCreatedFile = createdNode
+                            callUpdate(createdNode!!.sizeInBlocks / totalBlocks.toFloat(), lastCreatedFile!!.name)
+                            delay(1)
                             //Log.d("diskusage", createdNode.path2());
                         } else {
                             // directory
@@ -402,6 +408,8 @@ class NativeScanner(
                             )
                             pos += createdNode!!.sizeInBlocks
                             lastCreatedFile = createdNode
+                            callUpdate(createdNode!!.sizeInBlocks / totalBlocks.toFloat(), lastCreatedFile!!.name)
+                            delay(1)
                         } else {
                             val newS = SoftStack()
                             newS.prev = s
@@ -575,7 +583,7 @@ class NativeScanner(
      */
     @SuppressLint("DefaultLocale")
     @Throws(IOException::class)
-    private fun scanDirectory(
+    private suspend fun scanDirectory(
         parent: FileSystemEntry?, name: String,
         depth: Int
     ) {
@@ -615,6 +623,8 @@ class NativeScanner(
                 createdNode!!.initSizeInBytesAndBlocks(childBytes, childBlocks)
                 pos += createdNode!!.sizeInBlocks
                 lastCreatedFile = createdNode
+                callUpdate(createdNode!!.sizeInBlocks / totalBlocks.toFloat(), lastCreatedFile!!.name)
+                delay(1)
                 //        Log.d("diskusage", createdNode.path2());
             } else {
                 // directory
