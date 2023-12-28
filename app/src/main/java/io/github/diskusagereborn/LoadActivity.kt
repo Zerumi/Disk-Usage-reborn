@@ -97,11 +97,10 @@ class LoadActivity : ComponentActivity() {
 
     /** Iterate the progress value */
     private suspend fun loadProgress(updateProgress: (Float, String) -> Unit) {
+        updateProgress(0F, "Loading directories...")
         startLoadDirectories(updateProgress = updateProgress)
     }
     private suspend fun startLoadDirectories(updateProgress: (Float, String) -> Unit) {
-        updateProgress(0F, "Loading directories...")
-        delay(1)
         val mountPoint = getForKey(this, key)
         val stats = FileSystemStats(mountPoint!!)
         val heap = memoryQuota
@@ -304,7 +303,19 @@ fun LinearDeterminateIndicator(
     var currentProgress by remember { mutableStateOf(0f) }
     var loading by remember { mutableStateOf(false) }
     var currentFile by remember { mutableStateOf("Initializing scanner...") }
+
     val scope = rememberCoroutineScope() // Create a coroutine scope
+
+    LaunchedEffect(scope) {
+        scope.launch {
+            delay(1)
+            progressBarUpdater { progress, string ->
+                currentProgress = progress
+                currentFile = string
+            }
+            loading = false // Reset loading when the coroutine finishes
+        }
+    }
 
     Dialog(onDismissRequest = onDismissRequest) {
         Card(
@@ -347,16 +358,6 @@ fun LinearDeterminateIndicator(
                     )
                 }
             }
-        }
-    }
-
-    LaunchedEffect(scope) {
-        scope.launch {
-            progressBarUpdater { progress, string ->
-                currentProgress = progress
-                currentFile = string
-            }
-            loading = false // Reset loading when the coroutine finishes
         }
     }
 }
