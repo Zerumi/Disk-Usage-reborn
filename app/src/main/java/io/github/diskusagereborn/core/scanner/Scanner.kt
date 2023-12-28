@@ -26,6 +26,7 @@ import io.github.diskusagereborn.core.fs.entity.FileSystemEntrySmall
 import io.github.diskusagereborn.core.fs.entity.FileSystemEntry
 import io.github.diskusagereborn.core.fs.entity.FileSystemFile
 import io.github.diskusagereborn.utils.Logger.Companion.LOGGER
+import kotlinx.coroutines.delay
 import java.io.IOException
 import java.util.Arrays
 import java.util.PriorityQueue
@@ -34,7 +35,8 @@ class Scanner(
     private val maxDepth: Int,
     private val blockSize: Long,
     allocatedBlocks: Long,
-    private val maxHeapSize: Int
+    private val maxHeapSize: Int,
+    private val callUpdate : suspend (Float, String) -> Unit
 ) {
     private val blockSizeIn512Bytes: Long = blockSize / 512
     private val sizeThreshold: Long
@@ -81,7 +83,7 @@ class Scanner(
     }
 
     @Throws(IOException::class)
-    fun scan(file: LegacyFile): FileSystemEntry? {
+    suspend fun scan(file: LegacyFile): FileSystemEntry? {
         val stBlocks: Long
         try {
             val stat = Os.stat(file.canonicalPath)
@@ -130,7 +132,7 @@ class Scanner(
      * @param depth current directory tree depth
      */
     @SuppressLint("DefaultLocale")
-    private fun scanDirectory(
+    private suspend fun scanDirectory(
         parent: FileSystemEntry?,
         file: LegacyFile,
         depth: Int,
@@ -193,6 +195,8 @@ class Scanner(
                     )
                     pos += createdNode!!.sizeInBlocks
                     lastCreatedFile = createdNode
+                    callUpdate(0.1F, lastCreatedFile!!.name)
+                    delay(1)
                 } else {
                     // directory
                     scanDirectory(thisNode, childFile, depth + 1, stBlocks / blockSizeIn512Bytes)
