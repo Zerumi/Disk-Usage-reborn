@@ -11,7 +11,7 @@ This Android application built for:
 - Target SDK: 34 (Android 14.0 / UpsideDownCake)
 - Minimum SDK: 26 (Android 8.0 / Oreo)
 - Current release-version see [Releases](https://github.com/Zerumi/Disk-Usage-reborn/releases) page
-- 
+- I'm testing this mainly on Xiaomi Redmi Note 8T (Qualcomm Snapdragon 665 2.02Ghz 8 cores, 4GB RAM, 64GB Storage (~1GB free storage)
 
 ## Prerequirements for open project
 This project written with usage of:
