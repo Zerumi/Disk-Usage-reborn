@@ -25,6 +25,7 @@ import io.github.diskusagereborn.core.data.source.LegacyFile
 import io.github.diskusagereborn.core.fs.entity.FileSystemEntrySmall
 import io.github.diskusagereborn.core.fs.entity.FileSystemEntry
 import io.github.diskusagereborn.core.fs.entity.FileSystemFile
+import io.github.diskusagereborn.ui.load.ScannerAdapter
 import io.github.diskusagereborn.utils.Logger.Companion.LOGGER
 import kotlinx.coroutines.delay
 import java.io.IOException
@@ -36,7 +37,7 @@ class Scanner(
     private val blockSize: Long,
     allocatedBlocks: Long,
     private val maxHeapSize: Int,
-    private val callUpdate : suspend (Float, String) -> Unit
+    private val callUpdate : ScannerAdapter
 ) {
     private val blockSizeIn512Bytes: Long = blockSize / 512
     private val sizeThreshold: Long
@@ -195,7 +196,7 @@ class Scanner(
                     )
                     pos += createdNode!!.sizeInBlocks
                     lastCreatedFile = createdNode
-                    callUpdate(0.1F, lastCreatedFile!!.name)
+                    callUpdate.sourceUpdate(pos, lastCreatedFile!!.name)
                     delay(1)
                 } else {
                     // directory

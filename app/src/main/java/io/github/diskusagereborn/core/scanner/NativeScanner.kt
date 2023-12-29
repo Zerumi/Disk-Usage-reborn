@@ -24,6 +24,7 @@ import io.github.diskusagereborn.core.fs.entity.FileSystemEntrySmall
 import io.github.diskusagereborn.core.fs.entity.FileSystemFile
 import io.github.diskusagereborn.core.fs.mount.MountPoint
 import io.github.diskusagereborn.core.fs.entity.FileSystemEntry
+import io.github.diskusagereborn.ui.load.ScannerAdapter
 import io.github.diskusagereborn.utils.Logger.Companion.LOGGER
 import kotlinx.coroutines.delay
 import java.io.IOException
@@ -35,7 +36,7 @@ class NativeScanner(
     private val blockSize: Long,
     allocatedBlocks: Long,
     private val maxHeapSize: Int,
-    private val callUpdate : suspend (Float, String) -> Unit
+    private val callUpdate : ScannerAdapter
 ) {
     private val blockSizeIn512Bytes: Long = blockSize / 512
     private val sizeThreshold: Long
@@ -153,8 +154,6 @@ class NativeScanner(
                 else -> throw RuntimeException("Error: incorrect entity type")
             }
         }
-
-    private val totalBlocks = allocatedBlocks
 
     init {
         sizeThreshold = (allocatedBlocks shl FileSystemEntry.blockOffset) / (maxHeapSize / 2)
@@ -302,7 +301,7 @@ class NativeScanner(
                             )
                             pos += createdNode!!.sizeInBlocks
                             lastCreatedFile = createdNode
-                            callUpdate(createdNode!!.sizeInBlocks / totalBlocks.toFloat(), lastCreatedFile!!.name)
+                            callUpdate.sourceUpdate(pos, lastCreatedFile!!.name)
                             delay(1)
                             //Log.d("diskusage", createdNode.path2());
                         } else {
@@ -408,7 +407,7 @@ class NativeScanner(
                             )
                             pos += createdNode!!.sizeInBlocks
                             lastCreatedFile = createdNode
-                            callUpdate(createdNode!!.sizeInBlocks / totalBlocks.toFloat(), lastCreatedFile!!.name)
+                            callUpdate.sourceUpdate(pos, lastCreatedFile!!.name)
                             delay(1)
                         } else {
                             val newS = SoftStack()
@@ -623,7 +622,7 @@ class NativeScanner(
                 createdNode!!.initSizeInBytesAndBlocks(childBytes, childBlocks)
                 pos += createdNode!!.sizeInBlocks
                 lastCreatedFile = createdNode
-                callUpdate(createdNode!!.sizeInBlocks / totalBlocks.toFloat(), lastCreatedFile!!.name)
+                callUpdate.sourceUpdate(pos, lastCreatedFile!!.name)
                 delay(1)
                 //        Log.d("diskusage", createdNode.path2());
             } else {

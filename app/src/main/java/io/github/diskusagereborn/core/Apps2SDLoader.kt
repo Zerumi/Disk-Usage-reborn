@@ -27,13 +27,15 @@ import android.os.storage.StorageManager
 import io.github.diskusagereborn.LoadActivity
 import io.github.diskusagereborn.core.fs.entity.FileSystemEntry
 import io.github.diskusagereborn.core.fs.entity.FileSystemPackage
+import io.github.diskusagereborn.ui.load.ScannerAdapter
 import io.github.diskusagereborn.utils.Logger.Companion.LOGGER
 import kotlinx.coroutines.delay
 import java.util.Arrays
 
-class Apps2SDLoader(private val loadActivity: LoadActivity, val callUpdate: (Float, String) -> Unit) {
+class Apps2SDLoader(private val loadActivity: LoadActivity, val callUpdate: ScannerAdapter) {
     private var lastAppName: CharSequence = ""
     private var numLoadedPackages = 0
+    private var pos = callUpdate.getCurrentPos()
 
     suspend fun load(blockSize: Long): Array<FileSystemEntry> {
         val usageStatsManager =
@@ -72,7 +74,8 @@ class Apps2SDLoader(private val loadActivity: LoadActivity, val callUpdate: (Flo
                 p.applyFilter(blockSize)
                 entries.add(p)
                 numLoadedPackages++
-                callUpdate(numLoadedPackages / packages.size.toFloat(), appName)
+                pos += p.sizeInBlocks
+                callUpdate.sourceUpdate(pos, appName)
                 delay(1)
             } catch (e: PackageManager.NameNotFoundException) {
                 LOGGER.d("Failed to get package", e)

@@ -59,6 +59,8 @@ import io.github.diskusagereborn.core.fs.mount.MountPoint.Companion.getForKey
 import io.github.diskusagereborn.core.fs.mount.MountPoint.Companion.getMountPoints
 import io.github.diskusagereborn.core.scanner.NativeScanner
 import io.github.diskusagereborn.core.scanner.Scanner
+import io.github.diskusagereborn.ui.load.ProgressAdapter
+import io.github.diskusagereborn.ui.load.ScannerAdapter
 import io.github.diskusagereborn.ui.theme.DiskUsageTheme
 import io.github.diskusagereborn.utils.Logger.Companion.LOGGER
 import io.github.diskusagereborn.utils.ObjectWrapperForBinder
@@ -100,15 +102,17 @@ class LoadActivity : ComponentActivity() {
         updateProgress(0F, "Loading directories...")
         startLoadDirectories(updateProgress = updateProgress)
     }
+
     private suspend fun startLoadDirectories(updateProgress: (Float, String) -> Unit) {
         val mountPoint = getForKey(this, key)
         val stats = FileSystemStats(mountPoint!!)
+        val scannerAdapter = ProgressAdapter(stats, updateProgress)
         val heap = memoryQuota
         var rootElement: FileSystemEntry = try {
-            val scanner = NativeScanner(stats.blockSize, stats.busyBlocks, heap, updateProgress)
+            val scanner = NativeScanner(stats.blockSize, stats.busyBlocks, heap, scannerAdapter)
             scanner.scan(mountPoint)!!
         } catch (e: Exception) {
-            val scanner = Scanner(20, stats.blockSize, stats.busyBlocks, heap, updateProgress)
+            val scanner = Scanner(20, stats.blockSize, stats.busyBlocks, heap, scannerAdapter)
             scanner.scan(createRoot(mountPoint.root))!!
         }
 
@@ -125,7 +129,7 @@ class LoadActivity : ComponentActivity() {
             ) as FileSystemRoot
             entries = ArrayList()
             entries.add(media)
-            val appList = loadApps2SD(stats.blockSize, updateProgress)
+            val appList = loadApps2SD(stats.blockSize, scannerAdapter)
 
             LOGGER.i("applist size ${appList?.size}")
 
@@ -286,7 +290,7 @@ class LoadActivity : ComponentActivity() {
         Log.d(TAG, "original object=$scannedDirectories")
     }
 
-    private suspend fun loadApps2SD(blockSize: Long, updateProgress: (Float, String) -> Unit): Array<FileSystemEntry>? {
+    private suspend fun loadApps2SD(blockSize: Long, updateProgress: ScannerAdapter): Array<FileSystemEntry>? {
         return try {
             Apps2SDLoader(this, updateProgress).load(blockSize)
         } catch (t: Throwable) {
