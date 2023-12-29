@@ -1,6 +1,9 @@
 /*
+ * DiskUsage Reborn - Rewritten on modern stack version of DiskUsage
+ * Copyright (C) 2023-2024 Zerumi
+ *
  * DiskUsage - displays sdcard usage on android.
- * Copyright (C) 2008 Ivan Volosyuk
+ * Copyright (C) 2008-2011 Ivan Volosyuk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
