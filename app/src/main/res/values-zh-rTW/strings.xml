@@ -68,4 +68,5 @@
     <string name="show_data_desc">顯示分配給程式資料的儲存大小。</string>
     <string name="internal_only_desc">排除儲存在 SD 卡上的資料</string>
     <string name="show_apk_desc">顯示程式文件。</string>
+    <string name="button_confirm">Confirm</string>
 </resources>

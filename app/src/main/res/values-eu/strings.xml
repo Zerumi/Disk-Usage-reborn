@@ -66,7 +66,8 @@
 <string name="show_dalvikcache_desc">Bistaratu zure aplikazioei datu partizioan esleitutako dalvikCache-a.</string>
 <string name="show_cache">Erakutsi Cache-a</string>
 <string name="show_cache_desc">Aplikazio cache-ak, apk eta datuek erabili ezin duten, partizio desberdin bat erabiltzen du.</string>
-<string-array name="select_apps">
+    <string name="button_confirm">Confirm</string>
+    <string-array name="select_apps">
   <item>Telefonoan.</item>
   <item>SD txartelean.</item>
   <item>Bietan.</item>

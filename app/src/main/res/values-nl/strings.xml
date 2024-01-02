@@ -66,6 +66,7 @@
     <string name="show_dalvikcache_desc">Toon geheugen gebruikt voor dalvikCache op de datapartitie.</string>
     <string name="show_cache">Toon cache</string>
     <string name="show_cache_desc">Applicatiecache gebruikt een andere partitie en kan niet worden gebruikt voor apk of data.</string>
+    <string name="button_confirm">Confirm</string>
     <string-array name="select_apps">
         <item>Op apparaat.</item>
         <item>Op SD-kaart.</item>

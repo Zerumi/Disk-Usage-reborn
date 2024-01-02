@@ -49,4 +49,5 @@ non esiste"</string>
     <string name="show_dalvikcache_desc">Visualizza DalvikCache allocata per le app nella partizione dati.</string>
     <string name="show_cache">Visualizza cache</string>
     <string name="show_cache_desc">"La cache applicazioni usa una partizione differente e non può essere usata da APK e dati."</string>
+    <string name="button_confirm">Confirm</string>
 </resources>

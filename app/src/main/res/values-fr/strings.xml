@@ -68,4 +68,5 @@
 <string name="show_dalvikcache_desc">Affiche le dalvik Cache alloué pour vos applications sur votre partition.</string>
 <string name="show_cache">Afficher le Cache</string>
 <string name="show_cache_desc">Le cache des applications utilise une autre partition, qui ne peut être utilisée par votre apk ni pour le stockage de ses données.</string>
+    <string name="button_confirm">Confirm</string>
 </resources>

@@ -123,7 +123,7 @@ fun RequireAccessDialog(
                     onConfirm()
                 }
             ) {
-                Text("Confirm")
+                Text(stringResource(R.string.button_confirm))
             }
         }
     )

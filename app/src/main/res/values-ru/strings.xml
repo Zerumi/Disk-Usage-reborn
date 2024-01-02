@@ -66,7 +66,8 @@
 <string name="show_dalvikcache_desc">DalvikCache это часть apk скопированная системой.</string>
 <string name="show_cache">Показывать Cache</string>
 <string name="show_cache_desc">Cache программы хранится на отдельном разделе и обычно не учитывается.</string>
-<string-array name="select_apps">
+  <string name="button_confirm">Confirm</string>
+  <string-array name="select_apps">
   <item>на телефоне</item>
   <item>на карте памяти</item>
   <item>на телефоне и карте памяти</item>

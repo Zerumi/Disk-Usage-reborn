@@ -66,4 +66,5 @@
 <string name="show_dalvikcache_desc">Mostrar la dalvikCache reservada por tus aplicaciones en la partición de datos.</string>
 <string name="show_cache">Mostrar Caché</string>
 <string name="show_cache_desc">La caché de aplicaciones usa una partición distinta y no se puede usar para apliaciones ni datos.</string>
+    <string name="button_confirm">Confirm</string>
 </resources>
