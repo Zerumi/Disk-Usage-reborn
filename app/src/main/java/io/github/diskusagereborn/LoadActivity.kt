@@ -138,7 +138,8 @@ class LoadActivity : ComponentActivity() {
 
             if (appList != null) {
                 moveAppData(appList, media, stats.blockSize)
-                val apps = makeNode(null, getString(R.string.graph_apps), false).setChildren(
+                val apps = FileSystemEntry
+                    .makeNode(null, getString(R.string.graph_apps)).setChildren(
                     appList.copyOf(appList.size),
                     stats.blockSize
                 )
