@@ -35,6 +35,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import io.github.diskusagereborn.ui.theme.DiskUsageTheme
 
 class StorageAccessActivity : ComponentActivity() {
@@ -42,6 +43,21 @@ class StorageAccessActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        checkAccessAndGoToLoad()
+
+        setContent {
+            DiskUsageTheme {
+                RequireAccessDialog(title = stringResource(id = R.string.dialog_usage_access_title),
+                    message = stringResource(id = R.string.dialog_usage_access_desc),
+                    onConfirm = {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) requestAccessR()
+                        else requestAccessM()
+                    }) { finish() }
+            }
+        }
+    }
+
+    private fun checkAccessAndGoToLoad() {
         val hasAccess : Boolean =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
                 checkAccessR()
@@ -51,17 +67,11 @@ class StorageAccessActivity : ComponentActivity() {
         if (hasAccess) {
             goToLoad()
         }
+    }
 
-        setContent {
-            DiskUsageTheme {
-                RequireAccessDialog(title = "Access required",
-                    message =  "Access Required. Please, confirm to proceed setting necessary permissions, after them restart the app",
-                    onConfirm = {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) requestAccessR()
-                        else requestAccessM()
-                    }) { finish() }
-            }
-        }
+    override fun onResume() {
+        super.onResume()
+        checkAccessAndGoToLoad()
     }
 
     private fun goToLoad() {
