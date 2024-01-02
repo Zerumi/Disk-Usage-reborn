@@ -153,6 +153,8 @@ class LoadActivity : ComponentActivity() {
             visibleBlocks += e!!.sizeInBlocks
         }
         val systemBlocks = stats.totalBlocks - stats.freeBlocks - visibleBlocks
+        scannerAdapter.sourceUpdate(scannerAdapter.getCurrentPos() + systemBlocks, "System data")
+        delay(1)
         Collections.sort(entries, FileSystemEntry.COMPARE)
         if (systemBlocks > 0) {
             entries.add(
