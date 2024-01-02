@@ -35,7 +35,7 @@ import io.github.diskusagereborn.utils.Logger.Companion.LOGGER
 import kotlinx.coroutines.delay
 import java.util.Arrays
 
-class Apps2SDLoader(private val loadActivity: LoadActivity, val callUpdate: ScannerAdapter) {
+class Apps2SDLoader(private val loadActivity: LoadActivity, private val callUpdate: ScannerAdapter) {
     private var lastAppName: CharSequence = ""
     private var numLoadedPackages = 0
     private var pos = callUpdate.getCurrentPos()

@@ -23,7 +23,6 @@ package io.github.diskusagereborn.core.fs
 
 import io.github.diskusagereborn.core.data.source.StatFsSource
 import io.github.diskusagereborn.core.data.source.fast.StatFsSourceImpl
-import io.github.diskusagereborn.core.fs.entity.FileSystemEntry.Companion.calcSizeString
 import io.github.diskusagereborn.core.fs.mount.MountPoint
 import io.github.diskusagereborn.utils.Logger.Companion.LOGGER
 
@@ -53,11 +52,11 @@ class FileSystemStats(mountPoint: MountPoint) {
         }
     }
 
-    fun formatUsageInfo(): String {
+    /* fun formatUsageInfo(): String {
         return if (totalBlocks == 0L) "Used <no information>" else String.format(
             "Used %s of %s",
             calcSizeString((busyBlocks * blockSize).toFloat()),
             calcSizeString((totalBlocks * blockSize).toFloat())
         )
-    }
+    } */
 }

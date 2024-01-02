@@ -46,11 +46,11 @@ internal constructor(root: String?) : MountPoint(root, root, false) {
         private var init = false
         @JvmField
         var checksum = 0
-        @JvmStatic
+        /* @JvmStatic
         fun getRootedMountPoints(): List<MountPoint> {
             initMountPoints()
             return rootedMountPoints
-        }
+        } */
 
         @JvmStatic
         fun getForKey(key: String): MountPoint? {
@@ -86,11 +86,11 @@ internal constructor(root: String?) : MountPoint(root, root, false) {
             }
         }
 
-        @JvmStatic
+        /* @JvmStatic
         fun reset() {
             rootedMountPoints = ArrayList()
             rootedMountPointForKey = HashMap()
             init = false
-        }
+        } */
     }
 }

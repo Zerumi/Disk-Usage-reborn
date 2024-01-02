@@ -25,7 +25,7 @@ import io.github.diskusagereborn.core.fs.FileSystemStats
 
 
 class ProgressAdapter (
-    val rootFsStat : FileSystemStats,
+    private val rootFsStat : FileSystemStats,
     val uiProgressUpdater : suspend (Float, String) -> Unit) : ScannerAdapter {
 
         private var currentPos : Long = 0

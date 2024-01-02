@@ -40,6 +40,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -310,7 +311,7 @@ class LoadActivity : ComponentActivity() {
 fun LinearDeterminateIndicator(
     progressBarUpdater : suspend ((Float, String) -> Unit) -> Unit,
     onDismissRequest : () -> Unit) {
-    var currentProgress by remember { mutableStateOf(0f) }
+    var currentProgress by remember { mutableFloatStateOf(0f) }
     var loading by remember { mutableStateOf(false) }
     var currentFile by remember { mutableStateOf("Initializing scanner...") }
 

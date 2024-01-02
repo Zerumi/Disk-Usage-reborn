@@ -37,7 +37,7 @@ class FileSystemSuperRoot(private val displayBlockSize: Long) :
         return filterChildren(pattern, blockSize)
     }
 
-    fun getByAbsolutePath(path: String?): FileSystemEntry? {
+    /* fun getByAbsolutePath(path: String?): FileSystemEntry? {
         for (r in children!!) {
             if (r !is FileSystemRoot) {
                 continue
@@ -48,7 +48,7 @@ class FileSystemSuperRoot(private val displayBlockSize: Long) :
             }
         }
         return null
-    }
+    } */
 
     override fun getEntryByName(path: String, exactMatch: Boolean): FileSystemEntry? {
         return children?.get(0)!!.getEntryByName(path, exactMatch)

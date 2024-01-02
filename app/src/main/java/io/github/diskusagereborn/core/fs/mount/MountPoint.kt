@@ -74,12 +74,12 @@ open class MountPoint internal constructor(
             }
         }
 
-        @JvmStatic
+        /* @JvmStatic
         fun reset() {
             mountPoints = ArrayList()
             mountPointForKey = HashMap()
             init = false
             RootMountPoint.reset()
-        }
+        } */
     }
 }
