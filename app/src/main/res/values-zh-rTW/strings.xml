@@ -22,7 +22,7 @@
 <resources>
     <string name="app_name">磁碟詳情</string>
 <string name="app_description">有效地檢查 SD 卡內容并能清理空間。</string>
-<string name="scaning_directories">正在掃瞄內容表...</string>
+<string name="scaning_directories">正在掃瞄內容表…</string>
 <string name="button_show">顯示</string>
 <string name="button_delete">移除</string>
 <string name="button_cancel">取消</string>
@@ -48,26 +48,17 @@
 <string name="n_megabytes">%5.2f MiB</string>
 <string name="n_megabytes10">%5.1f MiB</string>
 <string name="n_megabytes100">%d MiB</string>
-<string name="n_gigabytes">%5.2f GiB</string>
-<string name="n_gigabytes10">%5.1f GiB</string>
-<string name="n_gigabytes100">%d GiB</string>
 <string name="dir_name_size_num_dirs">%1$s（%2$s，%3$d 資料夾）</string>
 <string name="dir_empty">%s（空）</string>
 <string name="dir_name_size">%1$s（%2$s）</string>
-    <string name="ask_view">檢視</string>
-    <string name="graph_system_data">系統資料</string>
-    <string name="select_apps">選擇程式</string>
-    <string name="select_storage">選擇儲存</string>
-    <string name="button_search">搜尋</string>
     <string name="button_rescan">重新掃描</string>
-    <string name="graph_free_space">空閒空間</string>
     <string name="show_cache">顯示快取</string>
     <string name="show_dalvikcache">顯示 Dalvik 快取</string>
     <string name="apps_bulk_uninstall_not_supported">不支援移除多個程式</string>
     <string name="app_storage">程式儲存</string>
     <string name="storage_card">儲存卡</string>
     <string name="delete_summary">%1$d 份檔案，總計大小：%2$s</string>
-    <string name="change_filter">篩選...</string>
+    <string name="change_filter">篩選…</string>
     <string name="apps_filter">程式篩選</string>
     <string name="internal_only">僅檢視內建儲存</string>
     <string name="show_apk">顯示 Apk</string>
@@ -77,8 +68,4 @@
     <string name="show_data_desc">顯示分配給程式資料的儲存大小。</string>
     <string name="internal_only_desc">排除儲存在 SD 卡上的資料</string>
     <string name="show_apk_desc">顯示程式文件。</string>
-    <string name="dialog_usage_access_title">需要使用狀況存取權限</string>
-    <string name="dialog_usage_access_desc">要允許磁碟詳情獲取已安裝程式清單嗎？</string>
-    <string name="dialog_external_storage_access_error">已拒絕存取外部儲存。</string>
-    <string name="about_view_source_code"><![CDATA[在 %s 上查看原始碼]]></string>
 </resources>

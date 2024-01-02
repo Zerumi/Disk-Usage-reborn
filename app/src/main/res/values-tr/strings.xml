@@ -20,7 +20,7 @@
 <resources>
     <string name="app_name">DiskUsage</string>
 <string name="app_description">SD kartını inceleyip temizlemenize olanak sağlar.</string>
-<string name="scaning_directories">Dizinler taranıyor...</string>
+<string name="scaning_directories">Dizinler taranıyor…</string>
 <string name="button_show">Göster</string>
 <string name="button_delete">Sil</string>
 <string name="button_rescan">Yeniden tara</string>
@@ -54,7 +54,7 @@
 <string name="app_storage">Uygulama Yedeklemesi</string>
 <string name="storage_card">Yedekleme kartı</string>
 <string name="delete_summary">%1$d dosya, toplam boyut: %2$s</string>
-<string name="change_filter">Süzgeç...</string>
+<string name="change_filter">Süzgeç…</string>
 <string name="apps_filter">Uygulama Süzgeci</string>
 <string name="internal_only">Yalnızca Dahili</string>
 <string name="internal_only_desc">SD kartında saklanan verileri sayma</string>

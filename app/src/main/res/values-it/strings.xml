@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">DiskUsage</string>
     <string name="app_description">Programma per l\'analisi del contenuto memoria disco e recuperare spazio disco.</string>
-    <string name="scaning_directories">Analisi cartelle...</string>
+    <string name="scaning_directories">Analisi cartelle…</string>
     <string name="button_show">Visualizza</string>
     <string name="button_delete">Elimina</string>
     <string name="button_rescan">Ri-analizza</string>
@@ -37,7 +37,7 @@ non esiste"</string>
     <string name="app_storage">App storage</string>
     <string name="storage_card">Scheda interna</string>
     <string name="delete_summary">%1$d file, dim. totale: %2$s</string>
-    <string name="change_filter">Filtro...</string>
+    <string name="change_filter">Filtro…</string>
     <string name="apps_filter">App filtro</string>
     <string name="internal_only">Solo interno</string>
     <string name="internal_only_desc">Escludi dati sulla scheda SD</string>
@@ -49,6 +49,4 @@ non esiste"</string>
     <string name="show_dalvikcache_desc">Visualizza DalvikCache allocata per le app nella partizione dati.</string>
     <string name="show_cache">Visualizza cache</string>
     <string name="show_cache_desc">"La cache applicazioni usa una partizione differente e non può essere usata da APK e dati."</string>
-    <string name="select_apps">Seleziona app</string>
-    <string name="select_storage">Seleziona storage</string>
 </resources>

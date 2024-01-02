@@ -20,7 +20,7 @@
 <resources>
 <string name="app_name">DiskUsage</string>
 <string name="app_description">SD txartelaren edukia aztertu eta leku librea lortzeko tresna.</string>
-<string name="scaning_directories">Direktorioak eskaneatzen...</string>
+<string name="scaning_directories">Direktorioak eskaneatzen…</string>
 <string name="button_show">Erakutsi</string>
 <string name="button_delete">Ezabatu</string>
 <string name="button_rescan">Berreskaneatu</string>
@@ -54,7 +54,7 @@
 <string name="app_storage">Aplikazio memoria</string>
 <string name="storage_card">SD txarteleko memoria</string>
 <string name="delete_summary">%1$d fitxategi, guztizko tamaina: %2$s</string>
-<string name="change_filter">Iragazkia...</string>
+<string name="change_filter">Iragazkia…</string>
 <string name="apps_filter">Aplikazio iragazkia</string>
 <string name="internal_only">Barnekoa soilik</string>
 <string name="internal_only_desc">Baztertu SD txartelean gordetako datuak</string>
@@ -66,8 +66,6 @@
 <string name="show_dalvikcache_desc">Bistaratu zure aplikazioei datu partizioan esleitutako dalvikCache-a.</string>
 <string name="show_cache">Erakutsi Cache-a</string>
 <string name="show_cache_desc">Aplikazio cache-ak, apk eta datuek erabili ezin duten, partizio desberdin bat erabiltzen du.</string>
-<string name="select_apps">Hautatu aplikazioak</string>
-<string name="select_storage">Hautatu memoria</string>
 <string-array name="select_apps">
   <item>Telefonoan.</item>
   <item>SD txartelean.</item>

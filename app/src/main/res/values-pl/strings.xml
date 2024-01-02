@@ -20,7 +20,7 @@
 <resources>
     <string name="app_name">DiskUsage</string>
 <string name="app_description">Narzędzie do sprawdzania zawartości karty SD i czyszczenia na niej miejsca.</string>
-<string name="scaning_directories">Skanowanie katalogów...</string>
+<string name="scaning_directories">Skanowanie katalogów…</string>
 <string name="button_show">Pokaż</string>
 <string name="button_delete">Usuń</string>
 <string name="button_rescan">Przeskanuj ponownie</string>
@@ -47,9 +47,6 @@
 <string name="n_megabytes">%5.2f MiB</string>
 <string name="n_megabytes10">%5.1f MiB</string>
 <string name="n_megabytes100">%d MiB</string>
-<string name="n_gigabytes">%5.2f GiB</string>
-<string name="n_gigabytes10">%5.1f GiB</string>
-<string name="n_gigabytes100">%d GiB</string>
 <string name="dir_name_size_num_dirs">%1$s (%2$s, %3$d dirs)</string>
 <string name="dir_empty">%s (pusty)</string>
 <string name="dir_name_size">%1$s (%2$s)</string>
@@ -69,21 +66,6 @@
 <string name="show_dalvikcache_desc">Wyświetl dalvikCache przydzieloną Twoim aplikacjom na partycji danych.</string>
 <string name="show_cache">Pokaż pamięć podręczną</string>
 <string name="show_cache_desc">Pamięć podręczna aplikacji używa innej partycji i nie może być używana przez apk i dane.</string>
-<string name="select_apps">Wybierz aplikacje</string>
-<string name="select_storage">Wybierz pamięć</string>
-<string name="button_search">Szukaj</string>
-<string name="graph_free_space">Wolne miejsce</string>
-<string name="graph_system_data">Dane systemowe</string>
-<string name="ask_view">Podgląd</string>
-<string name="dialog_usage_access_title">Wymagane uprawnienie dostępu do użytkowania</string>
-<string name="dialog_usage_access_desc">Zezwolić DiskUsage na uzyskanie listy zainstalowanych aplikacji?</string>
-<string name="dialog_external_storage_access_error">Odmówiono dostępu do pamięci zewnętrznej.</string>
-    <string name="dialog_ask_filemanager_title">Brak zgodnego menedżera plików</string>
-    <string name="dialog_ask_filemanager_desc">Nie znaleziono zgodnego menedżera plików.\n\nPoproś swojego ulubionego dewelopera menedżerów plików o integrację z DiskUsage lub zainstaluj:\n * Solid Explorer\n * Menedżer plików OI</string>
-    <string name="button_install_filemanager">Install Solid Explorer</string>
-    <string name="graph_media">Media</string>
-    <string name="graph_apps">Apki</string>
-    <string name="warn_on_file_select">Naciśnij menu, aby wyświetlić podgląd lub usunąć</string>
     <string-array name="select_apps">
   <item>Na urządzeniu.</item>
   <item>Na karcie SD</item>
@@ -94,6 +76,4 @@
   <item>SPokaż pamięć karty SD.</item>
   <item>Show both.</item>
 </string-array>
-    <string name="about_view_source_code"><![CDATA[View source code at %s]]></string>
-    <string name="action_about">Informacje</string>
 </resources>

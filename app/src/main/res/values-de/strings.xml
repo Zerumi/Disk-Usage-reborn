@@ -20,7 +20,7 @@
 <resources>
     <string name="app_name">DiskUsage</string>
 <string name="app_description">Tool um den Inhalt der SD-Karte zu untersuchen und Speicher darauf aufzuräumen.</string>
-<string name="scaning_directories">Scanne Verzeichnisse...</string>
+<string name="scaning_directories">Scanne Verzeichnisse…</string>
 <string name="button_show">Anzeigen</string>
 <string name="button_delete">Löschen</string>
 <string name="button_rescan">Neu scannen</string>
@@ -47,16 +47,13 @@
 <string name="n_megabytes">%5.2f MiB</string>
 <string name="n_megabytes10">%5.1f MiB</string>
 <string name="n_megabytes100">%d MiB</string>
-<string name="n_gigabytes">%5.2f GiB</string>
-<string name="n_gigabytes10">%5.1f GiB</string>
-<string name="n_gigabytes100">%d GiB</string>
 <string name="dir_name_size_num_dirs">%1$s (%2$s, %3$d Verz.)</string>
 <string name="dir_empty">%s (leer)</string>
 <string name="dir_name_size">%1$s (%2$s)</string>
   <string name="app_storage">App Speicher</string>
 <string name="storage_card">SD-Karte</string>
 <string name="delete_summary">%1$d Dateien, Gesamtgröße: %2$s</string>
-<string name="change_filter">Filter...</string>
+<string name="change_filter">Filter…</string>
   <string name="internal_only">Nur interner Speicher</string>
   <string name="show_apk">Apk anzeigen</string>
 <string name="show_apk_desc">App Dateien anzeigen.</string>
@@ -64,8 +61,6 @@
   <string name="show_dalvikcache">DalvikCache anzeigen</string>
 <string name="show_dalvikcache_desc">Speicher des dalvikCache der Apps auf der Datenpartition anzeigen.</string>
 <string name="show_cache">Cache anzeigen</string>
-  <string name="select_apps">Apps Auswählen</string>
-<string name="select_storage">Speicher auswählen</string>
 <string-array name="select_apps">
   <item>Interner Speicher</item>
   <item>SD-Karte</item>
@@ -81,8 +76,4 @@
   <string name="internal_only_desc">Daten der SD-Karte ausschließen</string>
   <string name="show_data_desc">Speicher der App Daten anzeigen.</string>
   <string name="show_cache_desc">Der App Cache ist auf einer anderen Partition und kann nicht für die Apks oder Daten genutzt werden.</string>
-    <string name="button_search">Suchen</string>
-  <string name="graph_free_space">Frei</string>
-  <string name="graph_system_data">Systemdaten</string>
-    <string name="ask_view">Auswahl</string>
 </resources>

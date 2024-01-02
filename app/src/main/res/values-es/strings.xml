@@ -20,7 +20,7 @@
 <resources>
 <string name="app_name">DiskUsage</string>
 <string name="app_description">Utilidad para examinar el contenido de la tarjeta SD y liberar espacio.</string>
-<string name="scaning_directories">Escaneando directorios...</string>
+<string name="scaning_directories">Escaneando directorios…</string>
 <string name="button_show">Mostrar</string>
 <string name="button_delete">Borrar</string>
 <string name="button_rescan">Refrescar</string>
@@ -54,7 +54,7 @@
 <string name="app_storage">Espacio de aplicaciones</string>
 <string name="storage_card">Espacio en la tarjeta SD</string>
 <string name="delete_summary">%1$d ficheros, tamaño total: %2$s</string>
-<string name="change_filter">Filtro...</string>
+<string name="change_filter">Filtro…</string>
 <string name="apps_filter">Filtro de aplicaciones</string>
 <string name="internal_only">Sólo internas</string>
 <string name="internal_only_desc">Excluir los datos de la tarjeta SD</string>
@@ -66,9 +66,4 @@
 <string name="show_dalvikcache_desc">Mostrar la dalvikCache reservada por tus aplicaciones en la partición de datos.</string>
 <string name="show_cache">Mostrar Caché</string>
 <string name="show_cache_desc">La caché de aplicaciones usa una partición distinta y no se puede usar para apliaciones ni datos.</string>
-<string name="select_apps">Seleccionar aplicaciones</string>
-<string name="select_storage">Seleccionar almacenamiento</string>
-<string name="button_search">Buscar</string>
-<string name="graph_free_space">Espacio libre</string>
-<string name="graph_system_data">Datos del sistema</string>
 </resources>

@@ -20,7 +20,7 @@
 <resources>
     <string name="app_name">DiskUsage</string>
 <string name="app_description">Utility to examine SD card content and cleanup some space there.</string>
-<string name="scaning_directories">Scanning directories...</string>
+<string name="scaning_directories">Scanning directories…</string>
 <string name="button_show">Show</string>
 <string name="button_delete">Delete</string>
 <string name="button_rescan">Rescan</string>
@@ -47,9 +47,9 @@
 <string name="n_megabytes">%5.2f MiB</string>
 <string name="n_megabytes10">%5.1f MiB</string>
 <string name="n_megabytes100">%d MiB</string>
-<string name="n_gigabytes">%5.2f GiB</string>
-<string name="n_gigabytes10">%5.1f GiB</string>
-<string name="n_gigabytes100">%d GiB</string>
+<string name="n_gigabytes" translatable="false">%5.2f GiB</string>
+<string name="n_gigabytes10" translatable="false">%5.1f GiB</string>
+<string name="n_gigabytes100" translatable="false">%d GiB</string>
 <string name="dir_name_size_num_dirs">%1$s (%2$s, %3$d dirs)</string>
 <string name="dir_empty">%s (empty)</string>
 <string name="dir_name_size">%1$s (%2$s)</string>
@@ -57,7 +57,7 @@
 <string name="app_storage">App Storage</string>
 <string name="storage_card">Storage card</string>
 <string name="delete_summary">%1$d files, total size: %2$s</string>
-<string name="change_filter">Filter...</string>
+<string name="change_filter">Filter…</string>
 <string name="apps_filter">Apps Filter</string>
 <string name="internal_only">Internal Only</string>
 <string name="internal_only_desc">Exclude data stored on SD Card</string>
@@ -69,21 +69,21 @@
 <string name="show_dalvikcache_desc">Display dalvikCache allocated for your apps on your data partition.</string>
 <string name="show_cache">Show Cache</string>
 <string name="show_cache_desc">Application cache uses different partition and can\'t be used by apk and data.</string>
-<string name="select_apps">Select apps</string>
-<string name="select_storage">Select storage</string>
-<string name="button_search">Search</string>
-<string name="graph_free_space">Free space</string>
-<string name="graph_system_data">System data</string>
-<string name="ask_view">View</string>
-<string name="dialog_usage_access_title">Usage Access Permission Needed</string>
-<string name="dialog_usage_access_desc">Allow DiskUsage to get list of installed apps?</string>
-<string name="dialog_external_storage_access_error">Access to external storage has been denied.</string>
-    <string name="dialog_ask_filemanager_title">Missing compatible file manager</string>
-    <string name="dialog_ask_filemanager_desc">No compatible filemanager found.\n\nAsk you favorite file manager developer for integration with DiskUsage or install:\n * Solid Explorer\n * OI File Manager</string>
-    <string name="button_install_filemanager">Install Solid Explorer</string>
-    <string name="graph_media">Media</string>
-    <string name="graph_apps">Apps</string>
-    <string name="warn_on_file_select">Press menu to preview or delete</string>
+<string name="select_apps" translatable="false">Select apps</string>
+<string name="select_storage" translatable="false">Select storage</string>
+<string name="button_search" translatable="false">Search</string>
+<string name="graph_free_space" translatable="false">Free space</string>
+<string name="graph_system_data" translatable="false">System data</string>
+<string name="ask_view" translatable="false">View</string>
+<string name="dialog_usage_access_title" translatable="false">Usage Access Permission Needed</string>
+<string name="dialog_usage_access_desc" translatable="false">Allow DiskUsage to get list of installed apps?</string>
+<string name="dialog_external_storage_access_error" translatable="false">Access to external storage has been denied.</string>
+    <string name="dialog_ask_filemanager_title" translatable="false">Missing compatible file manager</string>
+    <string name="dialog_ask_filemanager_desc" translatable="false">No compatible filemanager found.\n\nAsk you favorite file manager developer for integration with DiskUsage or install:\n * Solid Explorer\n * OI File Manager</string>
+    <string name="button_install_filemanager" translatable="false">Install Solid Explorer</string>
+    <string name="graph_media" translatable="false">Media</string>
+    <string name="graph_apps" translatable="false">Apps</string>
+    <string name="warn_on_file_select" translatable="false">Press menu to preview or delete</string>
     <string-array name="select_apps">
   <item>On device.</item>
   <item>On SD card.</item>
@@ -94,6 +94,6 @@
   <item>Show SD card memory.</item>
   <item>Show both.</item>
 </string-array>
-    <string name="about_view_source_code"><![CDATA[View source code at %s]]></string>
-    <string name="action_about">About</string>
+    <string name="about_view_source_code" translatable="false"><![CDATA[View source code at %s]]></string>
+    <string name="action_about" translatable="false">About</string>
 </resources>

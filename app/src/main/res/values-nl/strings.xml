@@ -20,7 +20,7 @@
 <resources>
     <string name="app_name">DiskUsage</string>
     <string name="app_description">Programma om het geheugengebruik te bekijken en ruimte te maken.</string>
-    <string name="scaning_directories">Mappen aan het scannen...</string>
+    <string name="scaning_directories">Mappen aan het scannen…</string>
     <string name="button_show">Toon</string>
     <string name="button_delete">Verwijder</string>
     <string name="button_rescan">Herscan</string>
@@ -54,7 +54,7 @@
     <string name="app_storage">Appgeheugen</string>
     <string name="storage_card">Geheugenkaart</string>
     <string name="delete_summary">%1$d bestanden, totale grootte: %2$s</string>
-    <string name="change_filter">Filter...</string>
+    <string name="change_filter">Filter…</string>
     <string name="apps_filter">Appsfilter</string>
     <string name="internal_only">Alleen inwendig</string>
     <string name="internal_only_desc">Toon geen data van SD-kaart</string>
@@ -66,8 +66,6 @@
     <string name="show_dalvikcache_desc">Toon geheugen gebruikt voor dalvikCache op de datapartitie.</string>
     <string name="show_cache">Toon cache</string>
     <string name="show_cache_desc">Applicatiecache gebruikt een andere partitie en kan niet worden gebruikt voor apk of data.</string>
-    <string name="select_apps">Kies applicaties</string>
-    <string name="select_storage">Kies opslag</string>
     <string-array name="select_apps">
         <item>Op apparaat.</item>
         <item>Op SD-kaart.</item>

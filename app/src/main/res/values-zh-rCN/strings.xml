@@ -47,19 +47,10 @@
 <string name="n_megabytes">%5.2f MiB</string>
 <string name="n_megabytes10">%5.1f MiB</string>
 <string name="n_megabytes100">%d MiB</string>
-<string name="n_gigabytes">%5.2f GiB</string>
-<string name="n_gigabytes10">%5.1f GiB</string>
-<string name="n_gigabytes100">%d GiB</string>
 <string name="dir_name_size_num_dirs">%1$s（%2$s，%3$d 个文件夹）</string>
 <string name="dir_empty">%s（空）</string>
 <string name="dir_name_size">%1$s（%2$s）</string>
     <string name="button_rescan">重新扫描</string>
-    <string name="graph_free_space">空闲空间</string>
-    <string name="button_search">搜索</string>
-    <string name="select_storage">选择存储</string>
-    <string name="select_apps">选择应用</string>
-    <string name="graph_system_data">系统数据</string>
-    <string name="ask_view">查看</string>
     <string name="show_cache_desc">应用缓存使用不同的分区，且这个分区不能被 apk 和数据所使用。</string>
     <string name="show_cache">显示缓存</string>
     <string name="storage_card">存储卡</string>
@@ -77,9 +68,4 @@
     <string name="show_dalvikcache_desc">显示 data 分区上分配给应用的 Dalvik 缓存大小。</string>
     <string name="internal_only">仅显示内置存储</string>
     <string name="internal_only_desc">排除存储在 SD 卡上的数据</string>
-    <string name="dialog_usage_access_title">需要使用情况访问权限</string>
-    <string name="dialog_usage_access_desc">要允许磁盘详情获取已安装应用列表吗？</string>
-    <string name="dialog_external_storage_access_error">已拒绝访问外置存储。</string>
-    <string name="about_view_source_code"><![CDATA[在 %s 上查看源代码]]></string>
-    <string name="action_about">关于</string>
 </resources>
