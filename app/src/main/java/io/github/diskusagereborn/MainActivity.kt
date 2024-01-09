@@ -36,6 +36,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -99,7 +100,7 @@ fun StartDialog(contents : Array<String>,
                 horizontalAlignment = Alignment.Start,
             ) {
                 Text(
-                    text = "Choose disk to examine.",
+                    text = stringResource(R.string.choose_disk_to_examine),
                     modifier = Modifier
                         .padding(16.dp, 16.dp, 16.dp, 0.dp),
                 )

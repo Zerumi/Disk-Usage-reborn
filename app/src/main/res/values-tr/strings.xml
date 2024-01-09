@@ -67,4 +67,5 @@
 <string name="show_cache">Ön belleği Göster</string>
 <string name="show_cache_desc">Uygulama ön belleği başka bir disk bölümü kullanır ve apk ile normal veriler tarafından kullanılamaz.</string>
     <string name="button_confirm">Confirm</string>
+    <string name="choose_disk_to_examine">Choose disk to examine.</string>
 </resources>

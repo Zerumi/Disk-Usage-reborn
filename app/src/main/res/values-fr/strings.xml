@@ -69,4 +69,5 @@
 <string name="show_cache">Afficher le Cache</string>
 <string name="show_cache_desc">Le cache des applications utilise une autre partition, qui ne peut être utilisée par votre apk ni pour le stockage de ses données.</string>
     <string name="button_confirm">Confirm</string>
+    <string name="choose_disk_to_examine">Choose disk to examine.</string>
 </resources>

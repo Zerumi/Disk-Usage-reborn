@@ -67,6 +67,7 @@
 <string name="show_cache">Erakutsi Cache-a</string>
 <string name="show_cache_desc">Aplikazio cache-ak, apk eta datuek erabili ezin duten, partizio desberdin bat erabiltzen du.</string>
     <string name="button_confirm">Confirm</string>
+    <string name="choose_disk_to_examine">Choose disk to examine.</string>
     <string-array name="select_apps">
   <item>Telefonoan.</item>
   <item>SD txartelean.</item>

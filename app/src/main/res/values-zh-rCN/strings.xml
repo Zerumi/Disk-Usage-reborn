@@ -69,4 +69,5 @@
     <string name="internal_only">仅显示内置存储</string>
     <string name="internal_only_desc">排除存储在 SD 卡上的数据</string>
     <string name="button_confirm">Confirm</string>
+    <string name="choose_disk_to_examine">Choose disk to examine.</string>
 </resources>

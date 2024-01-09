@@ -69,4 +69,5 @@
     <string name="internal_only_desc">排除儲存在 SD 卡上的資料</string>
     <string name="show_apk_desc">顯示程式文件。</string>
     <string name="button_confirm">Confirm</string>
+    <string name="choose_disk_to_examine">Choose disk to examine.</string>
 </resources>

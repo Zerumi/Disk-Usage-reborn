@@ -67,6 +67,7 @@
 <string name="show_cache">Pokaż pamięć podręczną</string>
 <string name="show_cache_desc">Pamięć podręczna aplikacji używa innej partycji i nie może być używana przez apk i dane.</string>
     <string name="button_confirm">Confirm</string>
+    <string name="choose_disk_to_examine">Choose disk to examine.</string>
     <string-array name="select_apps">
   <item>Na urządzeniu.</item>
   <item>Na karcie SD</item>

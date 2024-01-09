@@ -77,4 +77,5 @@
   <string name="show_data_desc">Speicher der App Daten anzeigen.</string>
   <string name="show_cache_desc">Der App Cache ist auf einer anderen Partition und kann nicht für die Apks oder Daten genutzt werden.</string>
     <string name="button_confirm">Confirm</string>
+    <string name="choose_disk_to_examine">Choose disk to examine.</string>
 </resources>

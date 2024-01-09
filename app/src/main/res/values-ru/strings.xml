@@ -67,6 +67,7 @@
 <string name="show_cache">Показывать Cache</string>
 <string name="show_cache_desc">Cache программы хранится на отдельном разделе и обычно не учитывается.</string>
   <string name="button_confirm">Confirm</string>
+  <string name="choose_disk_to_examine">Choose disk to examine.</string>
   <string-array name="select_apps">
   <item>на телефоне</item>
   <item>на карте памяти</item>
