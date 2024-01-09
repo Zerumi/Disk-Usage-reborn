@@ -3,7 +3,7 @@ Programming languages project: rewrite DiskUsage Android app
 
 ## About project
 This project was written for acquaintance with mobile development based on Kotlin & Jetpack Compose. So, this is my first application for Android :)   
-For that purpose, I've picked my favourite Android application, and tried to upgrade it. Fortunately, this application was written in early 2010, so it turns to be possible. Subsequently I realized that Compose canvas & software render may be very slow, so I'm thinking about adding some OpenGL, but that is beyond the scope of this programming languages project.
+For that purpose, I've picked my favourite Android application, and tried to upgrade it. Fortunately, this application was written in late 2000 - early 2010, so it turns to be possible. Subsequently I realized that Compose canvas & software render may be very slow, so I'm thinking about adding some OpenGL, but that is beyond the scope of this programming languages project.
 
 <ins>Video demonstration</ins> (*todo*)
 
