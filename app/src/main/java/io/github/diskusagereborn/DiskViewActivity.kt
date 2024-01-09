@@ -35,23 +35,33 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -120,21 +130,23 @@ val colorsByDepth : Array<Color> =
     )
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalTextApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 fun UsageView(rectangles : Array<FileRectangle>) {
     val textMeasurer = rememberTextMeasurer()
     // set up all transformation states
-    var scale by remember { mutableStateOf(1f) }
+    var scale by remember { mutableFloatStateOf(1f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
     val state = rememberTransformableState { zoomChange, offsetChange, _ ->
         scale *= zoomChange
         offset += offsetChange
     }
-    var selectedRectangle : FileRectangle by remember {
+    var selectedRectangle by remember {
         mutableStateOf(rectangles.find { x -> x.depthLevel == 0 }!!)
     }
     var size by remember { mutableStateOf(IntSize.Zero) }
+
     Scaffold(
+        modifier = Modifier.graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen),
         topBar = {
             TopAppBar(
                 title = {
@@ -143,16 +155,16 @@ fun UsageView(rectangles : Array<FileRectangle>) {
             )
         }
     ) { innerPadding ->
-        Surface(
+        /*Canvas(
             modifier = Modifier
                 .graphicsLayer(
                     scaleX = scale,
                     scaleY = scale,
                     translationX = offset.x * scale,
-                    translationY = offset.y * scale
+                    translationY = offset.y * scale,
+                    compositingStrategy = CompositingStrategy.Offscreen
                 )
                 .transformable(state = state)
-                .fillMaxSize()
                 .onSizeChanged {
                     size = it
                 }
@@ -163,18 +175,12 @@ fun UsageView(rectangles : Array<FileRectangle>) {
                             for (rect in rectangles) {
                                 if (rect.rectangle.contains(tapOffset)) {
                                     selectedRectangle = rect
-                                    val actualScale = size.height / rect.height
+                                    //val actualScale = size.height / rect.height
                                     val actualOffset = Offset(
                                         -rect.offsetX,
                                         -rect.offsetY
-                                    ) / actualScale
-                                    val consumedSize = Offset(
-                                        rect.width * (actualScale - 1F),
-                                        rect.height * (actualScale - 1F),
-                                    ) / actualScale
-                                    scale = actualScale
+                                    )
                                     offset = actualOffset
-                                    offset += consumedSize
                                     break
                                 }
                             }
@@ -182,46 +188,30 @@ fun UsageView(rectangles : Array<FileRectangle>) {
                     )
                 },
         ) {
-            Canvas(modifier = Modifier.fillMaxSize()) {
-                for (rectangle in rectangles) {
-                    drawRect(
-                        topLeft = Offset(rectangle.offsetX, rectangle.offsetY),
-                        color = Color.Black,
-                        size = Size(rectangle.width, rectangle.height),
-                        style = Stroke(
-                            width = 1F.coerceAtMost(rectangle.height * 0.05F).dp.toPx()
-                        ),
-                    )
-                    drawRect(
-                        topLeft = Offset(rectangle.offsetX, rectangle.offsetY),
-                        color = colorsByDepth[if (rectangle.depthLevel > 5) 5 else rectangle.depthLevel],
-                        size = Size(rectangle.width, rectangle.height),
-                    )
-                    val textLayoutResult: TextLayoutResult =
-                        textMeasurer.measure(
-                            text = AnnotatedString("${rectangle.name}\n${rectangle.displaySize}"),
-                            style = androidx.compose.ui.text.TextStyle(
-                                fontSize = (if (rectangle.calculatedFontSize == null)
-                                    24F / scale else rectangle.calculatedFontSize!!.value)
-                                    .coerceAtLeast(24F / scale)
-                                    .toSp(),
-                                fontWeight = FontWeight.Bold
-                            ),
-                            constraints = Constraints.fixed(rectangle.width.roundToInt(), rectangle.height.roundToInt())
-                        )
-                    if (!textLayoutResult.hasVisualOverflow) {
-                        if (rectangle.calculatedFontSize == null)
-                            rectangle.calculatedFontSize = (24F / scale).toSp()
-                        drawText(
-                            textLayoutResult = textLayoutResult,
-                            topLeft = Offset(rectangle.offsetX, rectangle.offsetY)
-                        )
-                    }
-                }
+            for (rectangle in rectangles) {
+                drawRect(
+                    topLeft = Offset(rectangle.offsetX, rectangle.offsetY),
+                    color = Color.Black,
+                    size = Size(rectangle.width, rectangle.height),
+                    style = Stroke(
+                        width = 1F.coerceAtMost(rectangle.height * 0.05F).dp.toPx()
+                    ),
+                )
+                drawRect(
+                    topLeft = Offset(rectangle.offsetX, rectangle.offsetY),
+                    color = colorsByDepth[if (rectangle.depthLevel > 5) 5 else rectangle.depthLevel],
+                    size = Size(rectangle.width, rectangle.height),
+                )
             }
-        }
+        }*/
+
+        // todo:
+        // Array[][] of FileTable
+        // get all heights (rows) by depth (column)
+        // and use LazyRow + LazyColumn
     }
 }
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
